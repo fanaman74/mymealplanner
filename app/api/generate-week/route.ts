@@ -8,6 +8,7 @@ interface RequestBody {
   apiKey: string
   model: string
   prefs: Preferences
+  lang?: 'en' | 'fr' | 'nl'
 }
 
 async function callOpenRouter(apiKey: string, model: string, systemPrompt: string, userPrompt: string): Promise<string> {

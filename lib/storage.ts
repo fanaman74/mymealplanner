@@ -7,6 +7,7 @@ export interface StorageData {
   prefs: Preferences
   apiKey: string
   model: string
+  apifyToken: string
 }
 
 const KEYS = {
@@ -15,6 +16,7 @@ const KEYS = {
   prefs: 'mmp.prefs',
   apiKey: 'mmp.apiKey',
   model: 'mmp.model',
+  apifyToken: 'mmp.apifyToken',
 } as const
 
 function safeGet<T>(key: string, fallback: T): T {
@@ -53,6 +55,7 @@ export function loadStorage(): StorageData {
     prefs: safeGet<Preferences>(KEYS.prefs, DEFAULT_PREFERENCES),
     apiKey: safeGet<string>(KEYS.apiKey, ''),
     model: safeGet<string>(KEYS.model, 'anthropic/claude-haiku-4.5'),
+    apifyToken: safeGet<string>(KEYS.apifyToken, ''),
   }
 }
 
@@ -62,6 +65,7 @@ export function saveStorage(data: StorageData): void {
   safeSet(KEYS.prefs, data.prefs)
   safeSet(KEYS.apiKey, data.apiKey)
   safeSet(KEYS.model, data.model)
+  safeSet(KEYS.apifyToken, data.apifyToken)
 }
 
 export function saveField<K extends keyof StorageData>(key: K, value: StorageData[K]): void {

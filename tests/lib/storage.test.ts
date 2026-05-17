@@ -9,6 +9,7 @@ const baseData = (): StorageData => ({
   prefs: DEFAULT_PREFERENCES,
   apiKey: '',
   model: 'anthropic/claude-haiku-4.5',
+  apifyToken: '',
 })
 
 describe('saveStorage / loadStorage', () => {

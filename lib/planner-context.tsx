@@ -20,6 +20,7 @@ interface PlannerActions {
   setPrefs: (prefs: Preferences) => void
   setApiKey: (key: string) => void
   setModel: (model: string) => void
+  setApifyToken: (token: string) => void
   randomizeMeal: (day: Weekday) => Promise<void>
   randomizeWeek: () => Promise<void>
 }
@@ -52,6 +53,7 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
       prefs: DEFAULT_PREFERENCES,
       apiKey: '',
       model: 'anthropic/claude-haiku-4.5',
+      apifyToken: '',
     }
     return {
       ...persisted,
@@ -70,9 +72,10 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
       state.history !== prev.history ||
       state.prefs !== prev.prefs ||
       state.apiKey !== prev.apiKey ||
-      state.model !== prev.model
+      state.model !== prev.model ||
+      state.apifyToken !== prev.apifyToken
     ) {
-      saveStorage({ current: state.current, history: state.history, prefs: state.prefs, apiKey: state.apiKey, model: state.model })
+      saveStorage({ current: state.current, history: state.history, prefs: state.prefs, apiKey: state.apiKey, model: state.model, apifyToken: state.apifyToken })
     }
     prevRef.current = state
   }, [state])
@@ -114,6 +117,10 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
 
   const setModel = useCallback((model: string) => {
     setState(s => ({ ...s, model }))
+  }, [])
+
+  const setApifyToken = useCallback((apifyToken: string) => {
+    setState(s => ({ ...s, apifyToken }))
   }, [])
 
   const randomizeMeal = useCallback(async (day: Weekday) => {
@@ -178,7 +185,7 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
   const value: PlannerContextValue = {
     ...state,
     setMeal, clearMeal, clearAll, saveSnapshot, loadWeek,
-    setPrefs, setApiKey, setModel,
+    setPrefs, setApiKey, setModel, setApifyToken,
     randomizeMeal, randomizeWeek,
     onError, openSettings,
   }

@@ -2,16 +2,60 @@
 'use client'
 
 import { useState } from 'react'
-import { Dices, Trash2, Save, ListChecks, SlidersHorizontal, History, Settings } from 'lucide-react'
+import { Dices, Trash2, Save, ListChecks, History, Settings } from 'lucide-react'
 import { PlannerProvider, usePlanner } from '@/lib/planner-context'
+import { I18nProvider, useLang } from '@/lib/i18n-context'
+import { t, Lang } from '@/lib/i18n'
 import { buildShoppingList } from '@/lib/ingredients'
 import { WeekGrid } from '@/components/WeekGrid'
 import { ShoppingListModal } from '@/components/ShoppingListModal'
-import { PreferencesPanel } from '@/components/PreferencesPanel'
 import { HistoryDrawer } from '@/components/HistoryDrawer'
+import { ParkingHero } from '@/components/ParkingHero'
+import { InlinePreferences } from '@/components/InlinePreferences'
 import { SettingsModal } from '@/components/SettingsModal'
 import { ToastStack, useToasts } from '@/components/Toast'
+import { SquiggleMotif, LeafMotif } from '@/components/Motifs'
 import { ShoppingList } from '@/lib/types'
+
+const LANGS: { code: Lang; label: string }[] = [
+  { code: 'en', label: 'EN' },
+  { code: 'fr', label: 'FR' },
+  { code: 'nl', label: 'NL' },
+]
+
+function LangToggle() {
+  const { lang, setLang } = useLang()
+  return (
+    <div style={{
+      display: 'flex',
+      gap: 2,
+      background: 'var(--mist)',
+      borderRadius: 999,
+      padding: 2,
+    }}>
+      {LANGS.map(({ code, label }) => (
+        <button
+          key={code}
+          onClick={() => setLang(code)}
+          style={{
+            padding: '3px 10px',
+            borderRadius: 999,
+            border: 'none',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.05em',
+            cursor: 'pointer',
+            transition: 'all 0.15s',
+            background: lang === code ? 'var(--tomato)' : 'transparent',
+            color: lang === code ? 'var(--cream)' : 'var(--aubergine)',
+          }}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
 
 interface PlannerAppProps {
   showSettings: boolean
@@ -20,8 +64,9 @@ interface PlannerAppProps {
 
 function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
   const { current, weekLoading, randomizeWeek, clearAll, saveSnapshot, storageAvailable } = usePlanner()
+  const { lang } = useLang()
+  const strings = t(lang)
   const [shoppingList, setShoppingList] = useState<ShoppingList | null>(null)
-  const [showPrefs, setShowPrefs] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
 
   function handleGenerateList() {
@@ -29,74 +74,194 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Storage warning banner */}
+    <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
+      {/* Storage warning */}
       {!storageAvailable && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-sm text-amber-800 text-center">
-          Local storage unavailable — your plan won&apos;t persist after closing this tab.
+        <div style={{
+          background: '#FFF7ED',
+          borderBottom: '1px solid #FED7AA',
+          padding: '8px 16px',
+          fontSize: 13,
+          color: '#92400E',
+          textAlign: 'center',
+        }}>
+          {strings.storageWarning}
         </div>
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-        <h1 className="text-lg font-bold text-gray-900">🍲 MyMealPlanner</h1>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowPrefs(true)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
-          >
-            <SlidersHorizontal size={15} /> Prefs
-          </button>
+      <header style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 30,
+        background: 'var(--cream)',
+        borderBottom: '1px solid var(--mist)',
+        padding: '10px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backdropFilter: 'blur(8px)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <LeafMotif size={20} />
+          <h1 className="mmp-header-title" style={{
+            fontFamily: 'var(--font-display)',
+            fontStyle: 'italic',
+            fontSize: 22,
+            color: 'var(--ink)',
+            margin: 0,
+            lineHeight: 1,
+          }}>
+            MyMealPlanner
+          </h1>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <LangToggle />
           <button
             onClick={() => setShowHistory(true)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 5,
+              padding: '5px 10px', borderRadius: 8, border: 'none',
+              background: 'transparent', fontSize: 12, color: 'var(--aubergine)', cursor: 'pointer',
+            }}
           >
-            <History size={15} /> History
+            <History size={13} />
+            <span className="mmp-header-btn-text">{strings.history}</span>
           </button>
           <button
             onClick={() => setShowSettings(true)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 5,
+              padding: '5px 10px', borderRadius: 8, border: 'none',
+              background: 'transparent', fontSize: 12, color: 'var(--aubergine)', cursor: 'pointer',
+            }}
           >
-            <Settings size={15} /> Settings
+            <Settings size={13} />
           </button>
         </div>
       </header>
 
-      <main className="max-w-screen-xl mx-auto px-4 py-6">
+      <main style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 16px 40px' }}>
+        {/* Animated supermarket hero */}
+        <ParkingHero />
+
+        {/* Inline preferences */}
+        <InlinePreferences />
+
+        {/* Section heading */}
+        <div style={{ marginBottom: 20 }}>
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 36,
+            lineHeight: 1,
+            color: 'var(--ink)',
+            margin: '0 0 6px',
+          }}>
+            {strings.thisWeek}{' '}
+            <span style={{ fontStyle: 'italic', color: 'var(--tomato)' }}>—</span>
+          </h2>
+          <SquiggleMotif color="var(--tomato)" width={64} />
+        </div>
+
         {/* Action bar */}
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="mmp-action-bar" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
           <button
             onClick={randomizeWeek}
             disabled={weekLoading}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '10px 20px', borderRadius: 12, border: 'none',
+              background: weekLoading ? 'var(--terracotta)' : 'var(--tomato)',
+              color: 'var(--cream)',
+              fontSize: 14, fontWeight: 600, cursor: weekLoading ? 'not-allowed' : 'pointer',
+              boxShadow: '0 4px 12px rgba(199,62,46,0.3)',
+              transition: 'all 0.2s',
+              fontFamily: 'inherit',
+            }}
           >
             <Dices size={15} />
-            {weekLoading ? 'Generating…' : 'Randomize Week'}
+            {weekLoading ? strings.generatingWeek : strings.randomizeWeek}
           </button>
           <button
             onClick={clearAll}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '10px 16px', borderRadius: 12,
+              border: '1px solid var(--mist)', background: 'transparent',
+              fontSize: 13, color: 'var(--aubergine)', cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
           >
-            <Trash2 size={15} /> Clear All
+            <Trash2 size={13} /> {strings.clearAll}
           </button>
           <button
             onClick={saveSnapshot}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '10px 16px', borderRadius: 12,
+              border: '1px solid var(--mist)', background: 'transparent',
+              fontSize: 13, color: 'var(--aubergine)', cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
           >
-            <Save size={15} /> Save Snapshot
+            <Save size={13} /> {strings.saveSnapshot}
           </button>
         </div>
+
+        {/* Week-wide loading banner */}
+        {weekLoading && (
+          <div style={{
+            marginBottom: 16,
+            padding: '14px 20px',
+            borderRadius: 14,
+            background: 'var(--saffron)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            boxShadow: '0 4px 16px rgba(232,169,59,0.25)',
+          }}>
+            <span style={{ fontSize: 20 }}>⏳</span>
+            <div>
+              <div style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 16,
+                fontStyle: 'italic',
+                color: 'var(--charcoal, #1A1410)',
+                lineHeight: 1,
+              }}>
+                {strings.generatingWeek}
+              </div>
+              <div style={{
+                fontFamily: 'var(--font-hand)',
+                fontSize: 14,
+                color: 'var(--aubergine)',
+                marginTop: 3,
+              }}>
+                {lang === 'fr' ? 'L\'IA prépare vos repas…' : lang === 'nl' ? 'AI bereidt uw maaltijden voor…' : 'AI is preparing your meals…'}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Week grid */}
         <WeekGrid />
 
         {/* Shopping list CTA */}
-        <div className="mt-8 flex justify-center">
+        <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
           <button
             onClick={handleGenerateList}
-            className="flex items-center gap-2 rounded-xl bg-green-600 px-8 py-3 text-base font-semibold text-white shadow hover:bg-green-700 transition-colors"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '14px 32px', borderRadius: 16,
+              border: 'none', background: 'var(--basil)',
+              color: 'var(--cream)',
+              fontSize: 15, fontWeight: 600, cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(93,122,62,0.3)',
+              fontFamily: 'inherit',
+            }}
           >
-            <ListChecks size={18} /> Generate Shopping List
+            <ListChecks size={18} /> {strings.shoppingList}
           </button>
         </div>
       </main>
@@ -109,7 +274,6 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
           onClose={() => setShoppingList(null)}
         />
       )}
-      <PreferencesPanel open={showPrefs} onClose={() => setShowPrefs(false)} />
       <HistoryDrawer open={showHistory} onClose={() => setShowHistory(false)} />
       <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
@@ -121,9 +285,11 @@ export default function Page() {
   const [showSettings, setShowSettings] = useState(false)
 
   return (
-    <PlannerProvider onError={addToast} openSettings={() => setShowSettings(true)}>
-      <PlannerApp showSettings={showSettings} setShowSettings={setShowSettings} />
-      <ToastStack toasts={toasts} onDismiss={dismissToast} />
-    </PlannerProvider>
+    <I18nProvider>
+      <PlannerProvider onError={addToast} openSettings={() => setShowSettings(true)}>
+        <PlannerApp showSettings={showSettings} setShowSettings={setShowSettings} />
+        <ToastStack toasts={toasts} onDismiss={dismissToast} />
+      </PlannerProvider>
+    </I18nProvider>
   )
 }

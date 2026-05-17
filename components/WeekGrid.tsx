@@ -23,17 +23,35 @@ export function WeekGrid() {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
-        {WEEKDAYS.map(day => (
-          <MealCard
-            key={day}
-            day={day}
-            meal={current.days[day]}
-            loading={dayLoading[day]}
-            weekLoading={weekLoading}
-            onRandomize={randomizeMeal}
-            onEdit={handleEdit}
-          />
+      {/* 4 + 3 grid — 12-col base keeps rows flush */}
+      <div className="mmp-week-grid" style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(12, 1fr)',
+        gap: 10,
+      }}>
+        {WEEKDAYS.slice(0, 4).map(day => (
+          <div key={day} style={{ gridColumn: 'span 3', display: 'flex', flexDirection: 'column' }}>
+            <MealCard
+              day={day}
+              meal={current.days[day]}
+              loading={dayLoading[day]}
+              weekLoading={weekLoading}
+              onRandomize={randomizeMeal}
+              onEdit={handleEdit}
+            />
+          </div>
+        ))}
+        {WEEKDAYS.slice(4, 7).map(day => (
+          <div key={day} style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column' }}>
+            <MealCard
+              day={day}
+              meal={current.days[day]}
+              loading={dayLoading[day]}
+              weekLoading={weekLoading}
+              onRandomize={randomizeMeal}
+              onEdit={handleEdit}
+            />
+          </div>
         ))}
       </div>
 

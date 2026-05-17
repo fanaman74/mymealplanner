@@ -9,6 +9,7 @@ interface RequestBody {
   model: string
   prefs: Preferences
   avoid: string[]
+  lang?: 'en' | 'fr' | 'nl'
 }
 
 async function callOpenRouter(
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const { apiKey, model, prefs, avoid } = body
+  const { apiKey, model, prefs, avoid, lang = 'en' } = body
   if (!apiKey) return NextResponse.json({ error: 'Missing apiKey' }, { status: 400 })
   if (!model) return NextResponse.json({ error: 'Missing model' }, { status: 400 })
 

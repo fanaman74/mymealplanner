@@ -1,15 +1,26 @@
 // lib/prompts.ts
 import { Preferences } from '@/lib/types'
 
-export function buildSystemPrompt(): string {
-  return `You are a Belgian/Flemish family dinner meal planner.
+type Lang = 'en' | 'fr' | 'nl'
+
+const LANG_NAMES: Record<Lang, string> = {
+  en: 'English',
+  fr: 'French',
+  nl: 'Dutch',
+}
+
+export function buildSystemPrompt(lang: Lang = 'en'): string {
+  return `You are a dinner meal planner for a multicultural family with French, Italian, and Ghanaian roots, living in Belgium.
 Output ONLY strict JSON — no prose, no markdown, no explanation outside the JSON object.
 Ingredient names must be lowercase singular (e.g. "tomato" not "Tomatoes").
 Quantities must use metric units (g, kg, ml, l) or pcs/tbsp/tsp/cup.
-Meals should suit a family cooking at home in Flanders, Belgium.`
+Draw from French, Italian, and Ghanaian culinary traditions as well as broader world cuisines.
+Ghanaian dishes may include jollof rice, groundnut soup, kelewele, kontomire stew, waakye, fufu, egusi, etc.
+Ingredients must be findable in Belgian supermarkets (Colruyt, Delhaize, Albert Heijn).
+IMPORTANT: Write all meal names, ingredient names, cuisine names, and prep time strings in ${LANG_NAMES[lang]}.`
 }
 
-export function buildMealUserPrompt(prefs: Preferences, avoid: string[]): string {
+export function buildMealUserPrompt(prefs: Preferences, avoid: string[], lang: Lang = 'en'): string {
   const avoidLine = avoid.length > 0
     ? `Do NOT suggest any of these meals (already in this week's plan): ${avoid.join(', ')}.`
     : ''
@@ -22,6 +33,7 @@ Allergies: ${prefs.allergies.join(', ') || 'none'}.
 Budget tier: ${prefs.budgetTier}.
 ${prefs.notes ? `Extra notes: ${prefs.notes}` : ''}
 ${avoidLine}
+All text fields in ${LANG_NAMES[lang]}.
 
 Return JSON matching this schema exactly:
 {
@@ -34,7 +46,7 @@ Return JSON matching this schema exactly:
 }`
 }
 
-export function buildWeekUserPrompt(prefs: Preferences): string {
+export function buildWeekUserPrompt(prefs: Preferences, lang: Lang = 'en'): string {
   return `Generate exactly 7 different dinner meals for a family of ${prefs.familySize} people.
 Diet: ${prefs.dietType}.
 Preferred cuisines: ${prefs.cuisines.join(', ') || 'any'}.
@@ -43,6 +55,7 @@ Allergies: ${prefs.allergies.join(', ') || 'none'}.
 Budget tier: ${prefs.budgetTier}.
 ${prefs.notes ? `Extra notes: ${prefs.notes}` : ''}
 Vary cuisines and proteins across the 7 meals. No duplicates.
+All text fields in ${LANG_NAMES[lang]}.
 
 Return JSON matching this schema exactly:
 {
