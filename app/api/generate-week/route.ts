@@ -1,0 +1,78 @@
+// app/api/generate-week/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import { buildSystemPrompt, buildWeekUserPrompt } from '@/lib/prompts'
+import { weekMealsResponseSchema } from '@/lib/schemas'
+import { Preferences } from '@/lib/types'
+
+interface RequestBody {
+  apiKey: string
+  model: string
+  prefs: Preferences
+}
+
+async function callOpenRouter(apiKey: string, model: string, systemPrompt: string, userPrompt: string): Promise<string> {
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      response_format: { type: 'json_object' },
+    }),
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw Object.assign(new Error(text), { status: res.status })
+  }
+
+  const data = await res.json()
+  return data.choices?.[0]?.message?.content ?? ''
+}
+
+export async function POST(req: NextRequest) {
+  let body: RequestBody
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  }
+
+  const { apiKey, model, prefs } = body
+  if (!apiKey) return NextResponse.json({ error: 'Missing apiKey' }, { status: 400 })
+
+  const systemPrompt = buildSystemPrompt()
+  const userPrompt = buildWeekUserPrompt(prefs)
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const raw = await callOpenRouter(
+        apiKey, model, systemPrompt,
+        attempt === 0 ? userPrompt : userPrompt + '\n\nIMPORTANT: Return ONLY the JSON object with a "meals" array of exactly 7 items.'
+      )
+      const parsed = JSON.parse(raw)
+      const validated = weekMealsResponseSchema.parse(parsed)
+      const meals = validated.meals.map(m => ({ ...m, id: crypto.randomUUID() }))
+      return NextResponse.json({ meals })
+    } catch (err: unknown) {
+      const isStatusError = err instanceof Error && 'status' in err
+      if (isStatusError) {
+        const status = (err as Error & { status: number }).status
+        if (status === 401) return NextResponse.json({ error: 'Invalid API key' }, { status: 401 })
+        if (status === 429) return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
+        return NextResponse.json({ error: 'OpenRouter error' }, { status: 502 })
+      }
+      if (attempt === 1) {
+        return NextResponse.json({ error: 'LLM returned invalid response' }, { status: 502 })
+      }
+    }
+  }
+
+  return NextResponse.json({ error: 'Unexpected error' }, { status: 500 })
+}
