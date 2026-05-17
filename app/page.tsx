@@ -1,65 +1,125 @@
-import Image from "next/image";
+// app/page.tsx
+'use client'
 
-export default function Home() {
+import { useState } from 'react'
+import { Dices, Trash2, Save, ListChecks, SlidersHorizontal, History, Settings } from 'lucide-react'
+import { PlannerProvider, usePlanner } from '@/lib/planner-context'
+import { buildShoppingList } from '@/lib/ingredients'
+import { WeekGrid } from '@/components/WeekGrid'
+import { ShoppingListModal } from '@/components/ShoppingListModal'
+import { PreferencesPanel } from '@/components/PreferencesPanel'
+import { HistoryDrawer } from '@/components/HistoryDrawer'
+import { SettingsModal } from '@/components/SettingsModal'
+import { ToastStack, useToasts } from '@/components/Toast'
+import { ShoppingList } from '@/lib/types'
+
+function PlannerApp() {
+  const { current, weekLoading, randomizeWeek, clearAll, saveSnapshot, storageAvailable } = usePlanner()
+  const [shoppingList, setShoppingList] = useState<ShoppingList | null>(null)
+  const [showPrefs, setShowPrefs] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
+
+  function handleGenerateList() {
+    setShoppingList(buildShoppingList(current))
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Storage warning banner */}
+      {!storageAvailable && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-sm text-amber-800 text-center">
+          Local storage unavailable — your plan won&apos;t persist after closing this tab.
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      )}
+
+      {/* Header */}
+      <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <h1 className="text-lg font-bold text-gray-900">🍲 MyMealPlanner</h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowPrefs(true)}
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <SlidersHorizontal size={15} /> Prefs
+          </button>
+          <button
+            onClick={() => setShowHistory(true)}
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
           >
-            Documentation
-          </a>
+            <History size={15} /> History
+          </button>
+          <button
+            onClick={() => setShowSettings(true)}
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
+          >
+            <Settings size={15} /> Settings
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-screen-xl mx-auto px-4 py-6">
+        {/* Action bar */}
+        <div className="mb-4 flex flex-wrap gap-2">
+          <button
+            onClick={randomizeWeek}
+            disabled={weekLoading}
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Dices size={15} />
+            {weekLoading ? 'Generating…' : 'Randomize Week'}
+          </button>
+          <button
+            onClick={clearAll}
+            className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+          >
+            <Trash2 size={15} /> Clear All
+          </button>
+          <button
+            onClick={saveSnapshot}
+            className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+          >
+            <Save size={15} /> Save Snapshot
+          </button>
+        </div>
+
+        {/* Week grid */}
+        <WeekGrid />
+
+        {/* Shopping list CTA */}
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={handleGenerateList}
+            className="flex items-center gap-2 rounded-xl bg-green-600 px-8 py-3 text-base font-semibold text-white shadow hover:bg-green-700 transition-colors"
+          >
+            <ListChecks size={18} /> Generate Shopping List
+          </button>
         </div>
       </main>
+
+      {/* Modals & drawers */}
+      {shoppingList && (
+        <ShoppingListModal
+          open={true}
+          list={shoppingList}
+          onClose={() => setShoppingList(null)}
+        />
+      )}
+      <PreferencesPanel open={showPrefs} onClose={() => setShowPrefs(false)} />
+      <HistoryDrawer open={showHistory} onClose={() => setShowHistory(false)} />
+      <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
-  );
+  )
+}
+
+export default function Page() {
+  const { toasts, addToast, dismissToast } = useToasts()
+  const [settingsOpen, setSettingsOpen] = useState(false)
+
+  return (
+    <PlannerProvider onError={addToast} openSettings={() => setSettingsOpen(true)}>
+      <PlannerApp />
+      <ToastStack toasts={toasts} onDismiss={dismissToast} />
+    </PlannerProvider>
+  )
 }
