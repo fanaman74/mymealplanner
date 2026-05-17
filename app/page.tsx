@@ -13,12 +13,16 @@ import { SettingsModal } from '@/components/SettingsModal'
 import { ToastStack, useToasts } from '@/components/Toast'
 import { ShoppingList } from '@/lib/types'
 
-function PlannerApp() {
+interface PlannerAppProps {
+  showSettings: boolean
+  setShowSettings: (v: boolean) => void
+}
+
+function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
   const { current, weekLoading, randomizeWeek, clearAll, saveSnapshot, storageAvailable } = usePlanner()
   const [shoppingList, setShoppingList] = useState<ShoppingList | null>(null)
   const [showPrefs, setShowPrefs] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
 
   function handleGenerateList() {
     setShoppingList(buildShoppingList(current))
@@ -114,11 +118,11 @@ function PlannerApp() {
 
 export default function Page() {
   const { toasts, addToast, dismissToast } = useToasts()
-  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   return (
-    <PlannerProvider onError={addToast} openSettings={() => setSettingsOpen(true)}>
-      <PlannerApp />
+    <PlannerProvider onError={addToast} openSettings={() => setShowSettings(true)}>
+      <PlannerApp showSettings={showSettings} setShowSettings={setShowSettings} />
       <ToastStack toasts={toasts} onDismiss={dismissToast} />
     </PlannerProvider>
   )
