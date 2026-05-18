@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const { mealName, ingredients, prepTime, lang = 'en', model = 'deepseek/deepseek-v4-flash' } = body
+  const { mealName, ingredients, prepTime, lang = 'en', model = 'deepseek/deepseek-chat' } = body
   const apiKey = process.env.OPENROUTER_API_KEY || ''
   if (!apiKey) return NextResponse.json({ error: 'Missing API key' }, { status: 400 })
 

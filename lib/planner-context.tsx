@@ -53,7 +53,7 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
       history: [],
       prefs: DEFAULT_PREFERENCES,
       apiKey: '',
-      model: 'deepseek/deepseek-v4-flash',
+      model: 'deepseek/deepseek-chat',
       apifyToken: '',
     }
     return {
