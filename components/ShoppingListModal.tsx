@@ -2,9 +2,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Copy, Download, Printer, ShoppingCart, ExternalLink, Loader2, Plus, Trash2 } from 'lucide-react'
+import { X, Copy, Download, Printer, ShoppingCart, ExternalLink, Loader2, Plus, Trash2, Mail, FileCode } from 'lucide-react'
 import { ShoppingList, ShoppingListItem } from '@/lib/types'
-import { shoppingListToCsv, shoppingListToText } from '@/lib/ingredients'
+import { shoppingListToCsv, shoppingListToText, shoppingListToHtml } from '@/lib/ingredients'
 import { usePlanner } from '@/lib/planner-context'
 import type { ItemSearchResult } from '@/app/api/supermarket-search/route'
 
@@ -88,7 +88,7 @@ function SearchLinks({ result }: { result: ItemSearchResult }) {
 }
 
 export function ShoppingListModal({ open, list, onClose }: ShoppingListModalProps) {
-  const { apifyToken, prefs } = usePlanner()
+  const { apifyToken, prefs, current } = usePlanner()
   const [categories, setCategories] = useState(() =>
     list.categories.map(c => ({ ...c, items: [...c.items], addInput: '' }))
   )
@@ -96,6 +96,11 @@ export function ShoppingListModal({ open, list, onClose }: ShoppingListModalProp
   const [priceLoading, setPriceLoading] = useState(false)
   const [priceError, setPriceError] = useState('')
   const [pricesSearched, setPricesSearched] = useState(false)
+  const [emailTo, setEmailTo] = useState('')
+  const [showEmailInput, setShowEmailInput] = useState(false)
+  const [emailSending, setEmailSending] = useState(false)
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'sent' | 'error'>('idle')
+  const [emailError, setEmailError] = useState('')
 
   useEffect(() => {
     if (open && !pricesSearched && !priceLoading) {
@@ -146,6 +151,35 @@ export function ShoppingListModal({ open, list, onClose }: ShoppingListModalProp
 
   function handlePrint() {
     window.open('/print', '_blank')
+  }
+
+  function handleDownloadHtml() {
+    const html = shoppingListToHtml(editableList, current)
+    downloadFile(html, 'shopping-list.html', 'text/html')
+  }
+
+  async function handleSendEmail() {
+    if (!emailTo.trim()) return
+    setEmailSending(true)
+    setEmailStatus('idle')
+    setEmailError('')
+    try {
+      const html = shoppingListToHtml(editableList, current)
+      const res = await fetch('/api/send-shopping-list', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: emailTo.trim(), html }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) { setEmailStatus('error'); setEmailError(data.error ?? 'Send failed'); return }
+      setEmailStatus('sent')
+      setShowEmailInput(false)
+    } catch {
+      setEmailStatus('error')
+      setEmailError('Network error')
+    } finally {
+      setEmailSending(false)
+    }
   }
 
   async function handleSearchPrices() {
@@ -385,7 +419,66 @@ export function ShoppingListModal({ open, list, onClose }: ShoppingListModalProp
             >
               <Printer size={12} /> Print
             </button>
+            <button
+              aria-label=".html"
+              onClick={handleDownloadHtml}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 5,
+                padding: '6px 12px', borderRadius: 8,
+                border: '1px solid var(--mist)', background: 'transparent',
+                fontSize: 12, color: '#41A05F', cursor: 'pointer', fontWeight: 600,
+              }}
+            >
+              <FileCode size={12} /> .html
+            </button>
+            <button
+              aria-label="Email"
+              onClick={() => { setShowEmailInput(v => !v); setEmailStatus('idle') }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 5,
+                padding: '6px 12px', borderRadius: 8,
+                border: '1px solid var(--mist)',
+                background: emailStatus === 'sent' ? '#E8F5E9' : 'transparent',
+                fontSize: 12, color: emailStatus === 'sent' ? '#41A05F' : 'var(--aubergine)', cursor: 'pointer',
+              }}
+            >
+              <Mail size={12} /> {emailStatus === 'sent' ? 'Sent ✓' : 'Email'}
+            </button>
           </div>
+
+          {/* Email input row */}
+          {showEmailInput && (
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginTop: 4 }}>
+              <input
+                type="email"
+                value={emailTo}
+                onChange={e => setEmailTo(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSendEmail()}
+                placeholder="your@email.com"
+                style={{
+                  flex: 1, fontSize: 12, padding: '6px 10px', borderRadius: 8,
+                  border: '1px solid var(--mist)', background: 'var(--paper)',
+                  color: 'var(--ink)', outline: 'none', fontFamily: 'inherit',
+                }}
+              />
+              <button
+                onClick={handleSendEmail}
+                disabled={emailSending || !emailTo.trim()}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  padding: '6px 14px', borderRadius: 8, border: 'none',
+                  background: '#41A05F', color: '#fff',
+                  fontSize: 12, fontWeight: 600, cursor: emailSending ? 'not-allowed' : 'pointer',
+                  opacity: emailSending ? 0.7 : 1,
+                }}
+              >
+                {emailSending ? <><Loader2 size={12} className="animate-spin" /> Sending…</> : <><Mail size={12} /> Send</>}
+              </button>
+              {emailStatus === 'error' && (
+                <span style={{ fontSize: 11, color: '#C73E2E' }}>{emailError}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
