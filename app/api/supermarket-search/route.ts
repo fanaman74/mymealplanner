@@ -131,7 +131,8 @@ async function searchAHBelgium(item: string, apifyToken: string): Promise<PriceR
 // ── Route ──────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
-    const { items, apifyToken = '' } = await req.json() as { items: string[]; apifyToken?: string }
+    const { items, apifyToken: clientToken = '' } = await req.json() as { items: string[]; apifyToken?: string }
+    const apifyToken = clientToken || process.env.APIFY_TOKEN || ''
     if (!items?.length) return NextResponse.json({ error: 'items array required' }, { status: 400 })
 
     const results: ItemSearchResult[] = await Promise.all(

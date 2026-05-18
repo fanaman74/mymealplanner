@@ -124,11 +124,6 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
   }, [])
 
   const randomizeMeal = useCallback(async (day: Weekday) => {
-    if (!state.apiKey) {
-      onError('No API key set — please add your OpenRouter key in Settings.')
-      openSettings()
-      return
-    }
     const avoid = WEEKDAYS
       .filter(d => d !== day && state.current.days[d] !== null)
       .map(d => state.current.days[d]!.name)
@@ -155,11 +150,6 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
   }, [state.apiKey, state.model, state.prefs, state.current.days, onError, openSettings, setMeal])
 
   const randomizeWeek = useCallback(async () => {
-    if (!state.apiKey) {
-      onError('No API key set — please add your OpenRouter key in Settings.')
-      openSettings()
-      return
-    }
     setState(s => ({ ...s, weekLoading: true }))
     try {
       const res = await fetch('/api/generate-week', {

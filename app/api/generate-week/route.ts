@@ -45,7 +45,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const { apiKey, model, prefs } = body
+  const { apiKey: clientKey, model, prefs } = body
+  const apiKey = clientKey || process.env.OPENROUTER_API_KEY || ''
   if (!apiKey) return NextResponse.json({ error: 'Missing apiKey' }, { status: 400 })
 
   const systemPrompt = buildSystemPrompt()
