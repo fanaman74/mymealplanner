@@ -53,7 +53,7 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
       history: [],
       prefs: DEFAULT_PREFERENCES,
       apiKey: '',
-      model: 'anthropic/claude-haiku-4.5',
+      model: 'deepseek/deepseek-v4-flash',
       apifyToken: '',
     }
     return {
