@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Dices, Trash2, Save, ListChecks, History, Settings, Moon, Sun, ExternalLink } from 'lucide-react'
+import { Dices, Trash2, Save, ListChecks, History, Settings, Moon, Sun } from 'lucide-react'
 import { PlannerProvider, usePlanner } from '@/lib/planner-context'
 import { I18nProvider, useLang } from '@/lib/i18n-context'
 import { t, Lang } from '@/lib/i18n'
@@ -176,21 +176,6 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
         {/* Editorial hero — Option B */}
         <HeroEditorial />
 
-        {/* HelloFresh meal picker */}
-        <div style={{ marginBottom: 16 }}>
-          <a href="/hellofresh" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '10px 20px', borderRadius: 999,
-            background: '#41A05F', color: '#FFFFFF',
-            fontSize: 13, fontWeight: 700, textDecoration: 'none',
-            boxShadow: '0 4px 12px rgba(65,160,95,0.35)',
-            transition: 'all 0.15s',
-          }}>
-            <span style={{ fontSize: 16 }}>🥗</span>
-            Browse HelloFresh meals
-            <ExternalLink size={12} />
-          </a>
-        </div>
 
         {/* Inline preferences */}
         <InlinePreferences />
