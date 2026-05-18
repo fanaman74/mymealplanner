@@ -337,7 +337,24 @@ export default function HelloFreshPage() {
   useEffect(() => {
     setLoading(true)
     setError(null)
-    fetch(`/api/hellofresh-meals?skip=${skip}&take=${take}`)
+
+    // Read saved prefs from localStorage (same source as InlinePreferences)
+    let dietType = ''
+    let cuisines: string[] = []
+    try {
+      const raw = localStorage.getItem('mmp.prefs')
+      if (raw) {
+        const p = JSON.parse(raw) as { dietType?: string; cuisines?: string[] }
+        dietType = p.dietType ?? ''
+        cuisines = p.cuisines ?? []
+      }
+    } catch { /* ignore */ }
+
+    const params = new URLSearchParams({ skip: String(skip), take: String(take) })
+    if (dietType && dietType !== 'omnivore') params.set('dietType', dietType)
+    for (const c of cuisines) params.append('cuisines', c)
+
+    fetch(`/api/hellofresh-meals?${params}`)
       .then((r) => r.json())
       .then((data: { meals: HFMeal[] }) => {
         setMeals(data.meals ?? [])
