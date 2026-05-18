@@ -10,7 +10,7 @@ import { buildShoppingList } from '@/lib/ingredients'
 import { WeekGrid } from '@/components/WeekGrid'
 import { ShoppingListModal } from '@/components/ShoppingListModal'
 import { HistoryDrawer } from '@/components/HistoryDrawer'
-import { ParkingHero } from '@/components/ParkingHero'
+import { HeroEditorial } from '@/components/HeroEditorial'
 import { InlinePreferences } from '@/components/InlinePreferences'
 import { SettingsModal } from '@/components/SettingsModal'
 import { ToastStack, useToasts } from '@/components/Toast'
@@ -173,8 +173,8 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
       </header>
 
       <main style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 16px 40px' }}>
-        {/* Animated supermarket hero */}
-        <ParkingHero />
+        {/* Editorial hero — Option B */}
+        <HeroEditorial />
 
         {/* HelloFresh meal picker */}
         <div style={{ marginBottom: 16 }}>
