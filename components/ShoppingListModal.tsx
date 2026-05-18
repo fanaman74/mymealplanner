@@ -1,7 +1,7 @@
 // components/ShoppingListModal.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Copy, Download, Printer, ShoppingCart, ExternalLink, Loader2, Plus, Trash2 } from 'lucide-react'
 import { ShoppingList, ShoppingListItem } from '@/lib/types'
 import { shoppingListToCsv, shoppingListToText } from '@/lib/ingredients'
@@ -88,7 +88,7 @@ function SearchLinks({ result }: { result: ItemSearchResult }) {
 }
 
 export function ShoppingListModal({ open, list, onClose }: ShoppingListModalProps) {
-  const { apifyToken } = usePlanner()
+  const { apifyToken, prefs } = usePlanner()
   const [categories, setCategories] = useState(() =>
     list.categories.map(c => ({ ...c, items: [...c.items], addInput: '' }))
   )
@@ -97,7 +97,19 @@ export function ShoppingListModal({ open, list, onClose }: ShoppingListModalProp
   const [priceError, setPriceError] = useState('')
   const [pricesSearched, setPricesSearched] = useState(false)
 
+  useEffect(() => {
+    if (open && !pricesSearched && !priceLoading) {
+      handleSearchPrices()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
   if (!open) return null
+
+  const totalCost = Object.values(priceResults).reduce((sum, r) => {
+    const prices = [r.colruyt?.price, r.delhaize?.price, r.carrefour?.price, r.ah?.price].filter((p): p is number => p !== undefined)
+    return sum + (prices.length ? Math.min(...prices) : 0)
+  }, 0)
 
   const editableList: ShoppingList = { categories: categories.map(({ addInput: _, ...c }) => c), generatedAt: list.generatedAt }
 
@@ -299,6 +311,29 @@ export function ShoppingListModal({ open, list, onClose }: ShoppingListModalProp
               <span style={{ fontSize: 11, color: 'var(--tomato)' }}>{priceError}</span>
             )}
           </div>
+
+          {/* Budget summary */}
+          {pricesSearched && totalCost > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 12, color: 'var(--aubergine)', opacity: 0.7 }}>
+                Estimated total (cheapest per item):
+              </span>
+              <span style={{
+                fontSize: 14, fontWeight: 700,
+                color: prefs.weeklyBudget && totalCost > prefs.weeklyBudget ? '#C73E2E' : '#5D7A3E',
+              }}>
+                €{totalCost.toFixed(2)}
+              </span>
+              {prefs.weeklyBudget && (
+                <span style={{ fontSize: 11, color: 'var(--aubergine)', opacity: 0.55 }}>
+                  {totalCost <= prefs.weeklyBudget
+                    ? `✓ within €${prefs.weeklyBudget} budget (€${(prefs.weeklyBudget - totalCost).toFixed(2)} left)`
+                    : `⚠ €${(totalCost - prefs.weeklyBudget).toFixed(2)} over €${prefs.weeklyBudget} budget`
+                  }
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Export row */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>

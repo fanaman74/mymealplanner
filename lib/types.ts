@@ -33,14 +33,13 @@ export interface Meal {
 }
 
 export type DietType = 'omnivore' | 'vegetarian' | 'pescatarian' | 'vegan'
-export type BudgetTier = 'low' | 'medium' | 'high'
 
 export interface Preferences {
   dietType: DietType
   cuisines: string[]
   dislikes: string[]
   allergies: string[]
-  budgetTier: BudgetTier
+  weeklyBudget?: number
   familySize: number
   notes: string
 }
@@ -50,7 +49,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   cuisines: ['Belgian', 'Italian', 'Asian'],
   dislikes: [],
   allergies: [],
-  budgetTier: 'medium',
+  weeklyBudget: undefined,
   familySize: 4,
   notes: '',
 }

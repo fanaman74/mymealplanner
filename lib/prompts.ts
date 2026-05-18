@@ -30,7 +30,7 @@ Diet: ${prefs.dietType}.
 Preferred cuisines: ${prefs.cuisines.join(', ') || 'any'}.
 Dislikes: ${prefs.dislikes.join(', ') || 'none'}.
 Allergies: ${prefs.allergies.join(', ') || 'none'}.
-Budget tier: ${prefs.budgetTier}.
+${prefs.weeklyBudget ? `Weekly grocery budget: €${prefs.weeklyBudget}.` : ''}
 ${prefs.notes ? `Extra notes: ${prefs.notes}` : ''}
 ${avoidLine}
 All text fields in ${LANG_NAMES[lang]}.
@@ -52,7 +52,7 @@ Diet: ${prefs.dietType}.
 Preferred cuisines: ${prefs.cuisines.join(', ') || 'any'}.
 Dislikes: ${prefs.dislikes.join(', ') || 'none'}.
 Allergies: ${prefs.allergies.join(', ') || 'none'}.
-Budget tier: ${prefs.budgetTier}.
+${prefs.weeklyBudget ? `Weekly grocery budget: €${prefs.weeklyBudget}.` : ''}
 ${prefs.notes ? `Extra notes: ${prefs.notes}` : ''}
 Vary cuisines and proteins across the 7 meals. No duplicates.
 All text fields in ${LANG_NAMES[lang]}.

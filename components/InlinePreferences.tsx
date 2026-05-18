@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { ChevronDown, Check } from 'lucide-react'
 import { usePlanner } from '@/lib/planner-context'
-import { DEFAULT_PREFERENCES, DietType, BudgetTier, Preferences } from '@/lib/types'
+import { DEFAULT_PREFERENCES, DietType, Preferences } from '@/lib/types'
 import { useLang } from '@/lib/i18n-context'
 
 const DIET_OPTIONS: { value: DietType; label: string; emoji: string }[] = [
@@ -14,11 +14,6 @@ const DIET_OPTIONS: { value: DietType; label: string; emoji: string }[] = [
   { value: 'vegan',       label: 'Vegan',        emoji: '🌱' },
 ]
 
-const BUDGET_OPTIONS: { value: BudgetTier; label: string; sub: string; emoji: string }[] = [
-  { value: 'low',    label: 'Budget',    sub: '< €10 / repas', emoji: '🪙' },
-  { value: 'medium', label: 'Moyen',     sub: '€10–20 / repas', emoji: '💶' },
-  { value: 'high',   label: 'Premium',   sub: '€20+ / repas',  emoji: '✨' },
-]
 
 const CUISINE_OPTIONS = [
   'French', 'Italian', 'Ghanaian', 'Belgian', 'Spanish', 'Greek',
@@ -110,31 +105,6 @@ function DietCard({ value, label, emoji, active, onClick }: {
   )
 }
 
-function BudgetCard({ value, label, sub, emoji, active, onClick }: {
-  value: string; label: string; sub: string; emoji: string; active: boolean; onClick: () => void
-}) {
-  const bg     = active ? '#3D2433' : 'white'
-  const border = active ? '2px solid #3D2433' : '1.5px solid #D9D2BF'
-  const txtCol = active ? '#F6EFE0' : '#2A1F1A'
-  const subCol = active ? 'rgba(246,239,224,0.7)' : 'rgba(61,36,51,0.45)'
-  const shadow = active ? '0 3px 10px rgba(61,36,51,0.28)' : '0 1px 3px rgba(42,31,26,0.06)'
-
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        flex: 1, padding: '12px 10px', borderRadius: 12,
-        border, background: bg, cursor: 'pointer',
-        fontFamily: 'inherit', transition: 'all 0.15s',
-        boxShadow: shadow, textAlign: 'left' as const,
-      }}
-    >
-      <div style={{ fontSize: 18, marginBottom: 4 }}>{emoji}</div>
-      <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1, color: txtCol }}>{label}</div>
-      <div style={{ fontSize: 10, marginTop: 3, lineHeight: 1, color: subCol }}>{sub}</div>
-    </button>
-  )
-}
 
 export function InlinePreferences() {
   const { prefs, setPrefs } = usePlanner()
@@ -377,14 +347,25 @@ export function InlinePreferences() {
 
           {/* Step 4 — Budget */}
           <div>
-            <StepLabel n={4} label={lbl('Budget per meal', 'Budget par repas', 'Budget per maaltijd')} />
-            <div className="mmp-budget-row" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              {BUDGET_OPTIONS.map(o => (
-                <BudgetCard key={o.value} {...o}
-                  active={local.budgetTier === o.value}
-                  onClick={() => setLocal(p => ({ ...p, budgetTier: o.value }))}
+            <StepLabel n={4} label={lbl('Weekly grocery budget', 'Budget courses / semaine', 'Weekelijks boodschappenbudget')} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', border: '1.5px solid #D9D2BF', borderRadius: 10, background: 'white', overflow: 'hidden' }}>
+                <span style={{ padding: '0 8px', fontSize: 13, color: '#3D2433', borderRight: '1px solid #D9D2BF' }}>€</span>
+                <input
+                  type="number"
+                  min={0}
+                  step={5}
+                  value={local.weeklyBudget ?? ''}
+                  onChange={e => setLocal(p => ({ ...p, weeklyBudget: e.target.value ? Number(e.target.value) : undefined }))}
+                  placeholder="—"
+                  style={{ width: 72, padding: '7px 10px', border: 'none', outline: 'none', fontSize: 13, color: '#2A1F1A', fontFamily: 'inherit', background: 'transparent' }}
                 />
-              ))}
+              </div>
+              {local.weeklyBudget && (
+                <span style={{ fontSize: 11, color: '#5D7A3E', fontWeight: 500 }}>
+                  ≈ €{(local.weeklyBudget / 7).toFixed(0)}{lbl('/day', '/jour', '/dag')}
+                </span>
+              )}
             </div>
           </div>
 

@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import { usePlanner } from '@/lib/planner-context'
-import { DEFAULT_PREFERENCES, DietType, BudgetTier, Preferences } from '@/lib/types'
+import { DEFAULT_PREFERENCES, DietType, Preferences } from '@/lib/types'
 
 const DIET_OPTIONS: { value: DietType; label: string }[] = [
   { value: 'omnivore', label: 'Omnivore' },
@@ -13,11 +13,6 @@ const DIET_OPTIONS: { value: DietType; label: string }[] = [
   { value: 'vegan', label: 'Vegan' },
 ]
 
-const BUDGET_OPTIONS: { value: BudgetTier; label: string }[] = [
-  { value: 'low', label: 'Budget' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'high', label: 'High-end' },
-]
 
 const CUISINE_OPTIONS = [
   'Belgian', 'Italian', 'French', 'Spanish', 'Greek', 'Turkish',
@@ -124,25 +119,6 @@ export function PreferencesPanel({ open, onClose }: PrefsPanelProps) {
               placeholder="nuts, gluten, ..."
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
-
-          <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Budget</p>
-            <div className="flex gap-2">
-              {BUDGET_OPTIONS.map(o => (
-                <button
-                  key={o.value}
-                  onClick={() => setLocal(p => ({ ...p, budgetTier: o.value }))}
-                  className={`rounded-full px-3 py-1 text-sm ${
-                    local.budgetTier === o.value
-                      ? 'bg-amber-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {o.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           <div>
