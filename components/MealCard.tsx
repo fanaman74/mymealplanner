@@ -1,7 +1,7 @@
 // components/MealCard.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dices, Pencil, ChevronDown, ChevronUp, BookOpen } from 'lucide-react'
 import { Meal, Weekday } from '@/lib/types'
 import { useLang } from '@/lib/i18n-context'
@@ -51,7 +51,19 @@ export function MealCard({
   const seed = DAY_SEEDS[day]
   const [expanded, setExpanded] = useState(false)
   const [showInstructions, setShowInstructions] = useState(false)
+  const [imgUrl, setImgUrl] = useState<string | null>(null)
   const longKey = DAY_TO_LONG[day]
+
+  useEffect(() => {
+    if (!meal?.name) { setImgUrl(null); return }
+    let cancelled = false
+    setImgUrl(null)
+    fetch(`/api/meal-image?q=${encodeURIComponent(meal.name)}`)
+      .then(r => r.json())
+      .then(d => { if (!cancelled) setImgUrl(d.imageUrl ?? null) })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [meal?.name])
   const dayLabel = strings.days[longKey]
   const dayShort = strings.daysShort[longKey]
 
@@ -75,8 +87,18 @@ export function MealCard({
       {/* Illustration */}
       {(meal || loading) && (
         <div style={{ position: 'relative' }}>
-          {meal?.cuisine ? (
-            /* Flag banner replaces illustration */
+          {imgUrl ? (
+            <img
+              src={imgUrl}
+              alt={meal?.name ?? ''}
+              style={{
+                width: '100%',
+                height: hero ? 200 : 130,
+                objectFit: 'cover',
+                display: 'block',
+              }}
+            />
+          ) : meal?.cuisine ? (
             <div style={{
               height: hero ? 200 : 130,
               background: BG_COLORS[(meal ? hashName(meal.name) : seed) % BG_COLORS.length],
@@ -108,6 +130,26 @@ export function MealCard({
           }}>
             {hero ? dayLabel : dayShort}
           </div>
+          {/* Cuisine flag bubble — top right */}
+          {meal?.cuisine && cuisineFlag(meal.cuisine) && (
+            <div style={{
+              position: 'absolute',
+              top: 8,
+              right: 10,
+              background: 'rgba(255,255,255,0.88)',
+              backdropFilter: 'blur(4px)',
+              borderRadius: '50%',
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 18,
+              boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+            }}>
+              {cuisineFlag(meal.cuisine)}
+            </div>
+          )}
         </div>
       )}
 
