@@ -3,6 +3,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { emptyWeekPlan, DEFAULT_PREFERENCES, Meal, Preferences, Weekday, WEEKDAYS, WeekPlan } from '@/lib/types'
+import { hfToMeal, buildHFParams } from '@/lib/hellofresh'
 import { isStorageAvailable, loadStorage, saveStorage, StorageData } from '@/lib/storage'
 
 interface PlannerState extends StorageData {
@@ -123,54 +124,60 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
     setState(s => ({ ...s, apifyToken }))
   }, [])
 
-  const randomizeMeal = useCallback(async (day: Weekday) => {
-    const avoid = WEEKDAYS
-      .filter(d => d !== day && state.current.days[d] !== null)
-      .map(d => state.current.days[d]!.name)
+  async function fetchHFMeals(prefs: Preferences): Promise<Meal[]> {
+    const params = buildHFParams({ dietType: prefs.dietType, cuisines: prefs.cuisines })
+    const res = await fetch(`/api/hellofresh-meals?${params}`)
+    if (!res.ok) throw new Error('HF fetch failed')
+    const data = await res.json() as { meals: import('@/app/api/hellofresh-meals/route').HFMeal[] }
+    return data.meals.map(hfToMeal)
+  }
 
+  const randomizeMeal = useCallback(async (day: Weekday) => {
+    const avoid = new Set(
+      WEEKDAYS.filter(d => d !== day && state.current.days[d] !== null)
+        .map(d => state.current.days[d]!.name.toLowerCase())
+    )
     setState(s => ({ ...s, dayLoading: { ...s.dayLoading, [day]: true } }))
     try {
-      const res = await fetch('/api/generate-meal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: state.apiKey, model: state.model, prefs: state.prefs, avoid }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        if (res.status === 401) { onError('Invalid API key.'); openSettings(); return }
-        onError(data.error ?? 'Failed to generate meal')
-        return
-      }
-      setMeal(day, data.meal)
+      const meals = await fetchHFMeals(state.prefs)
+      const candidates = meals.filter(m => !avoid.has(m.name.toLowerCase()))
+      const pick = candidates[Math.floor(Math.random() * candidates.length)]
+      if (pick) setMeal(day, { ...pick, id: crypto.randomUUID() })
+      else onError('No matching HelloFresh meals found for your preferences.')
     } catch {
-      onError('Network error — check your connection.')
+      onError('Failed to fetch HelloFresh meals — check your connection.')
     } finally {
       setState(s => ({ ...s, dayLoading: { ...s.dayLoading, [day]: false } }))
     }
-  }, [state.apiKey, state.model, state.prefs, state.current.days, onError, openSettings, setMeal])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.prefs, state.current.days, onError, setMeal])
 
   const randomizeWeek = useCallback(async () => {
     setState(s => ({ ...s, weekLoading: true }))
     try {
-      const res = await fetch('/api/generate-week', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: state.apiKey, model: state.model, prefs: state.prefs }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        if (res.status === 401) { onError('Invalid API key.'); openSettings(); return }
-        onError(data.error ?? 'Failed to generate week')
-        return
+      const meals = await fetchHFMeals(state.prefs)
+      // Shuffle and pick 7 unique meals
+      const shuffled = [...meals].sort(() => Math.random() - 0.5)
+      const picked: Meal[] = []
+      const seen = new Set<string>()
+      for (const m of shuffled) {
+        if (!seen.has(m.name.toLowerCase())) {
+          seen.add(m.name.toLowerCase())
+          picked.push({ ...m, id: crypto.randomUUID() })
+          if (picked.length === 7) break
+        }
       }
-      const days = Object.fromEntries(WEEKDAYS.map((d, i) => [d, data.meals[i] ?? null])) as Record<Weekday, Meal | null>
+      // Pad with repeats if fewer than 7 unique meals available
+      while (picked.length < 7) picked.push({ ...shuffled[0], id: crypto.randomUUID() })
+      const days = Object.fromEntries(WEEKDAYS.map((d, i) => [d, picked[i]])) as Record<Weekday, Meal>
       setState(s => ({ ...s, current: { ...s.current, days } }))
     } catch {
-      onError('Network error — check your connection.')
+      onError('Failed to fetch HelloFresh meals — check your connection.')
     } finally {
       setState(s => ({ ...s, weekLoading: false }))
     }
-  }, [state.apiKey, state.model, state.prefs, onError, openSettings])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.prefs, onError])
 
   const value: PlannerContextValue = {
     ...state,

@@ -188,45 +188,55 @@ function mapHFItem(item: Record<string, unknown>): HFMeal {
   }
 }
 
+// Map our diet types to HF tag slugs
+const DIET_TAG: Record<string, string> = {
+  vegetarian: 'vegetarian',
+  vegan: 'vegan',
+  pescatarian: 'pescatarian',
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const skip = searchParams.get('skip') ?? '0'
   const take = searchParams.get('take') ?? '20'
+  const dietType = searchParams.get('dietType') ?? ''
+  const cuisines = searchParams.getAll('cuisines')
 
   const locales = ['en-BE', 'nl-BE']
   let meals: HFMeal[] = []
 
   for (const locale of locales) {
     try {
-      const url = `https://www.hellofresh.com/gw/recipes/recipes/search?locale=${locale}&country=BE&take=${take}&skip=${skip}`
+      const params = new URLSearchParams({ locale, country: 'BE', take, skip })
+      if (DIET_TAG[dietType]) params.append('tags[]', DIET_TAG[dietType])
+      for (const c of cuisines) params.append('cuisines[]', c.toLowerCase())
+
+      const url = `https://www.hellofresh.com/gw/recipes/recipes/search?${params}`
       const res = await fetch(url, {
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; MealPlanner/1.0)',
-        },
+        headers: { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0 (compatible; MealPlanner/1.0)' },
         next: { revalidate: 300 },
       })
-
       if (!res.ok) continue
-
       const data = await res.json() as Record<string, unknown>
       const items = Array.isArray(data.items)
         ? (data.items as Array<Record<string, unknown>>)
         : Array.isArray((data as Record<string, unknown[]>).recipes)
           ? ((data as Record<string, unknown[]>).recipes as Array<Record<string, unknown>>)
           : []
-
-      if (items.length > 0) {
-        meals = items.map(mapHFItem)
-        break
-      }
-    } catch {
-      // try next locale
-    }
+      if (items.length > 0) { meals = items.map(mapHFItem); break }
+    } catch { /* try next locale */ }
   }
 
+  // Client-side filter mock meals by diet/cuisine when API unavailable
   if (meals.length === 0) {
-    meals = MOCK_MEALS
+    meals = MOCK_MEALS.filter(m => {
+      if (dietType === 'vegetarian' && !m.tags.some(t => /vegetarian/i.test(t))) return false
+      if (dietType === 'vegan' && !m.tags.some(t => /vegan/i.test(t))) return false
+      if (dietType === 'pescatarian' && !m.tags.some(t => /seafood|fish|pescatarian/i.test(t))) return false
+      if (cuisines.length > 0 && !cuisines.some(c => m.cuisines.some(mc => mc.toLowerCase() === c.toLowerCase()))) return false
+      return true
+    })
+    if (meals.length === 0) meals = MOCK_MEALS
   }
 
   return NextResponse.json({ meals })
