@@ -2,12 +2,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Dices, Pencil, ChevronDown, ChevronUp } from 'lucide-react'
+import { Dices, Pencil, ChevronDown, ChevronUp, BookOpen } from 'lucide-react'
 import { Meal, Weekday } from '@/lib/types'
 import { useLang } from '@/lib/i18n-context'
 import { t } from '@/lib/i18n'
 import { MealArt, BG_COLORS, hashName } from './MealArt'
 import { ClockMotif } from './Motifs'
+import { CookingInstructionsModal } from './CookingInstructionsModal'
 
 const DAY_SEEDS: Record<Weekday, number> = {
   mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6,
@@ -49,6 +50,7 @@ export function MealCard({
   const disabled = loading || weekLoading
   const seed = DAY_SEEDS[day]
   const [expanded, setExpanded] = useState(false)
+  const [showInstructions, setShowInstructions] = useState(false)
   const longKey = DAY_TO_LONG[day]
   const dayLabel = strings.days[longKey]
   const dayShort = strings.daysShort[longKey]
@@ -283,7 +285,33 @@ export function MealCard({
             <Pencil size={12} /> {strings.edit}
           </button>
         )}
+        {meal && (
+          <button
+            aria-label="Cooking instructions"
+            onClick={() => setShowInstructions(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: '5px 10px',
+              borderRadius: 999,
+              border: '1px solid var(--mist)',
+              background: 'transparent',
+              fontSize: 11,
+              fontWeight: 500,
+              color: '#41A05F',
+              cursor: 'pointer',
+              transition: 'background 0.15s',
+            }}
+          >
+            <BookOpen size={12} /> Instructions
+          </button>
+        )}
       </div>
+
+      {showInstructions && meal && (
+        <CookingInstructionsModal meal={meal} onClose={() => setShowInstructions(false)} />
+      )}
     </div>
   )
 }

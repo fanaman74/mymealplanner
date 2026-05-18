@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "mymealplanner",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "node_modules/.bin/next",
+      "runtimeArgs": ["dev"],
       "port": 3000,
       "autoPort": true
     }
