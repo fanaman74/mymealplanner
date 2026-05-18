@@ -315,7 +315,7 @@ export default function ShoppingPage() {
             <div style={{ fontSize: 48, marginBottom: 12 }}>🛒</div>
             <p style={{ fontSize: 15 }}>Add items above or import from your week plan.</p>
           </div>
-        ) : searched && results.length > 0 ? (
+        ) : searched ? (
           /* Results table */
           <div style={{ overflowX: 'auto', borderRadius: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, background: '#fff' }}>

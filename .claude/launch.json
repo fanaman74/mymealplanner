@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "mymealplanner",
-      "runtimeExecutable": "node_modules/.bin/next",
-      "runtimeArgs": ["dev"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/fredanaman/Documents/claudecode/mymealplanner/node_modules/.bin/next", "dev"],
       "port": 3000,
       "autoPort": true
     }
