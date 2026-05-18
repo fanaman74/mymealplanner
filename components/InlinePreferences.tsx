@@ -23,11 +23,11 @@ const CUISINE_OPTIONS = [
 const INPUT: React.CSSProperties = {
   width: '100%',
   borderRadius: 10,
-  border: '1.5px solid #D9D2BF',
+  border: '1.5px solid #C8DECE',
   background: 'white',
   padding: '9px 13px',
   fontSize: 13,
-  color: '#2A1F1A',
+  color: '#1D2F2A',
   outline: 'none',
   boxSizing: 'border-box' as const,
   fontFamily: 'inherit',
@@ -38,7 +38,7 @@ function StepLabel({ n, label }: { n: number; label: string }) {
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
       <div style={{
         width: 24, height: 24, borderRadius: '50%',
-        background: '#C73E2E', color: 'white',
+        background: '#41A05F', color: 'white',
         fontSize: 11, fontWeight: 700,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexShrink: 0,
@@ -47,7 +47,7 @@ function StepLabel({ n, label }: { n: number; label: string }) {
       </div>
       <span style={{
         fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
-        textTransform: 'uppercase' as const, color: '#3D2433',
+        textTransform: 'uppercase' as const, color: '#1D2F2A',
       }}>
         {label}
       </span>
@@ -62,15 +62,15 @@ function CuisineChip({ label, active, onClick }: { label: string; active: boolea
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 5,
         padding: '6px 14px', borderRadius: 999,
-        border: active ? '2px solid #7BB88A' : '1.5px solid #D9D2BF',
-        background: active ? '#C8E6C9' : 'white',
-        color: '#1A1A1A',                  // always dark — no CSS var dependency
+        border: active ? '2px solid #41A05F' : '1.5px solid #C8DECE',
+        background: active ? '#E8F3EC' : 'white',
+        color: '#1D2F2A',                  // always dark — no CSS var dependency
         fontSize: 12, fontWeight: active ? 600 : 400,
         cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
         boxShadow: active ? '0 2px 8px rgba(123,184,138,0.35)' : 'none',
       }}
     >
-      {active && <Check size={11} strokeWidth={3} color="#2A6A3A" />}
+      {active && <Check size={11} strokeWidth={3} color="#1D2F2A" />}
       {label}
     </button>
   )
@@ -80,10 +80,10 @@ function DietCard({ value, label, emoji, active, onClick }: {
   value: string; label: string; emoji: string; active: boolean; onClick: () => void
 }) {
   // Hard-code colors — no CSS var inheritance that can silently fail
-  const bg     = active ? '#5D7A3E' : 'white'
-  const border = active ? '2px solid #5D7A3E' : '1.5px solid #D9D2BF'
-  const txtCol = active ? '#FFFFFF' : '#2A1F1A'
-  const shadow = active ? '0 3px 10px rgba(93,122,62,0.3)' : '0 1px 3px rgba(42,31,26,0.06)'
+  const bg     = active ? '#2B6A47' : 'white'
+  const border = active ? '2px solid #2B6A47' : '1.5px solid #C8DECE'
+  const txtCol = active ? '#FFFFFF' : '#1D2F2A'
+  const shadow = active ? '0 3px 10px rgba(65,160,95,0.3)' : '0 1px 3px rgba(42,31,26,0.06)'
 
   return (
     <button
@@ -163,9 +163,9 @@ export function InlinePreferences() {
 
   return (
     <div style={{
-      background: '#FBF6EA',
+      background: '#F4F6F3',
       borderRadius: 20,
-      border: '1.5px solid #D9D2BF',
+      border: '1.5px solid #C8DECE',
       marginBottom: 28,
       overflow: 'hidden',
       boxShadow: '0 4px 16px rgba(42,31,26,0.08)',
@@ -178,24 +178,24 @@ export function InlinePreferences() {
           width: '100%', display: 'flex', alignItems: 'center',
           justifyContent: 'space-between', padding: '0 20px', height: 56,
           background: 'none', border: 'none',
-          borderBottom: open ? '1.5px solid #D9D2BF' : 'none',
+          borderBottom: open ? '1.5px solid #C8DECE' : 'none',
           cursor: 'pointer', fontFamily: 'inherit',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
             width: 6, height: 28, borderRadius: 4,
-            background: 'linear-gradient(180deg, #C73E2E 0%, #E8A93B 100%)',
+            background: 'linear-gradient(180deg, #41A05F 0%, #FC9F37 100%)',
           }} />
           <span style={{ fontSize: 22 }}>👨‍👩‍👧‍👦</span>
           <div style={{ textAlign: 'left' }}>
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontStyle: 'italic', fontSize: 19, color: '#2A1F1A', lineHeight: 1,
+              fontStyle: 'italic', fontSize: 19, color: '#1D2F2A', lineHeight: 1,
             }}>
               {headerLabel}
             </div>
-            <div style={{ fontSize: 11, color: '#3D2433', opacity: 0.55, marginTop: 1 }}>
+            <div style={{ fontSize: 11, color: '#1D2F2A', opacity: 0.55, marginTop: 1 }}>
               {lbl('diet · cuisines · preferences', 'régime · cuisines · préférences', 'dieet · keukens · voorkeuren')}
             </div>
           </div>
@@ -203,18 +203,18 @@ export function InlinePreferences() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {!open && (
             <div style={{ display: 'flex', gap: 5 }}>
-              <span style={{ padding: '3px 9px', borderRadius: 999, fontSize: 11, background: '#5D7A3E', color: 'white', fontWeight: 500 }}>
+              <span style={{ padding: '3px 9px', borderRadius: 999, fontSize: 11, background: '#2B6A47', color: 'white', fontWeight: 500 }}>
                 {DIET_OPTIONS.find(d => d.value === local.dietType)?.emoji} {local.dietType}
               </span>
-              <span style={{ padding: '3px 9px', borderRadius: 999, fontSize: 11, background: '#D9D2BF', color: '#3D2433' }}>
+              <span style={{ padding: '3px 9px', borderRadius: 999, fontSize: 11, background: '#C8DECE', color: '#1D2F2A' }}>
                 {local.cuisines.length} {lbl('cuisines', 'cuisines', 'keukens')}
               </span>
-              <span style={{ padding: '3px 9px', borderRadius: 999, fontSize: 11, background: '#D9D2BF', color: '#3D2433' }}>
+              <span style={{ padding: '3px 9px', borderRadius: 999, fontSize: 11, background: '#C8DECE', color: '#1D2F2A' }}>
                 {local.familySize} 👤
               </span>
             </div>
           )}
-          <ChevronDown size={18} color="#3D2433"
+          <ChevronDown size={18} color="#1D2F2A"
             style={{ transform: open ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s', flexShrink: 0 }}
           />
         </div>
@@ -236,7 +236,7 @@ export function InlinePreferences() {
             </div>
           </div>
 
-          <div style={{ height: 1, background: '#D9D2BF', opacity: 0.5 }} />
+          <div style={{ height: 1, background: '#C8DECE', opacity: 0.5 }} />
 
           {/* Step 2 — Cuisines */}
           <div>
@@ -256,12 +256,12 @@ export function InlinePreferences() {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 5,
                     padding: '6px 14px', borderRadius: 999,
-                    border: '2px solid #7BB88A', background: '#C8E6C9',
-                    color: '#1A1A1A', fontSize: 12, fontWeight: 600,
+                    border: '2px solid #41A05F', background: '#E8F3EC',
+                    color: '#1D2F2A', fontSize: 12, fontWeight: 600,
                     cursor: 'pointer', fontFamily: 'inherit',
                   }}
                 >
-                  <Check size={11} strokeWidth={3} color="#2A6A3A" />
+                  <Check size={11} strokeWidth={3} color="#1D2F2A" />
                   {c}
                   <span style={{ fontSize: 14, lineHeight: 1, marginLeft: 2, opacity: 0.6 }}>×</span>
                 </button>
@@ -277,15 +277,15 @@ export function InlinePreferences() {
                 placeholder={lbl('Add cuisine…', 'Ajouter une cuisine…', 'Keuken toevoegen…')}
                 style={{
                   flex: 1, fontSize: 12, padding: '6px 12px', borderRadius: 999,
-                  border: '1.5px dashed #D9D2BF', background: 'transparent',
-                  color: '#2A1F1A', outline: 'none', fontFamily: 'inherit',
+                  border: '1.5px dashed #C8DECE', background: 'transparent',
+                  color: '#1D2F2A', outline: 'none', fontFamily: 'inherit',
                 }}
               />
               <button
                 onClick={addCustomCuisine}
                 style={{
                   padding: '6px 14px', borderRadius: 999, border: 'none',
-                  background: '#C73E2E', color: 'white', fontSize: 12,
+                  background: '#41A05F', color: 'white', fontSize: 12,
                   fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                 }}
               >
@@ -298,7 +298,7 @@ export function InlinePreferences() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '6px 16px', borderRadius: 999, border: 'none',
-                  background: '#E8A93B', color: '#2A1F1A', fontSize: 12,
+                  background: '#FC9F37', color: '#1D2F2A', fontSize: 12,
                   fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                   boxShadow: '0 2px 8px rgba(232,169,59,0.3)',
                 }}
@@ -306,33 +306,33 @@ export function InlinePreferences() {
                 🎲 {lbl('Random 7', 'Aléatoire 7', 'Willekeurig 7')}
               </button>
               {local.cuisines.length > 0 && (
-                <span style={{ fontSize: 11, color: '#5D7A3E', fontWeight: 500 }}>
+                <span style={{ fontSize: 11, color: '#2B6A47', fontWeight: 500 }}>
                   {local.cuisines.length} {lbl('selected', 'sélectionnée(s)', 'geselecteerd')}
                 </span>
               )}
             </div>
           </div>
 
-          <div style={{ height: 1, background: '#D9D2BF', opacity: 0.5 }} />
+          <div style={{ height: 1, background: '#C8DECE', opacity: 0.5 }} />
 
           {/* Step 3 — Dislikes & Allergies */}
           <div>
             <StepLabel n={3} label={lbl('Dislikes & allergies', 'Pas aimés & allergies', 'Niet lekker & allergieën')} />
             <div className="mmp-prefs-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               <div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#3D2433', opacity: 0.6, marginBottom: 6 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: '#1D2F2A', opacity: 0.6, marginBottom: 6 }}>
                   🚫 {lbl('Dislikes', 'Pas aimés', 'Niet lekker')}
                 </div>
                 <input type="text" value={dislikeInput} onChange={e => setDislikeInput(e.target.value)}
                   placeholder={lbl('mushrooms, eggplant…', 'champignons, aubergine…', 'champignons, aubergine…')}
                   style={INPUT}
                 />
-                <span style={{ fontSize: 10, color: '#3D2433', opacity: 0.45, marginTop: 4, display: 'block' }}>
+                <span style={{ fontSize: 10, color: '#1D2F2A', opacity: 0.45, marginTop: 4, display: 'block' }}>
                   {lbl('comma-separated', 'séparés par virgule', 'komma-gescheiden')}
                 </span>
               </div>
               <div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#3D2433', opacity: 0.6, marginBottom: 6 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: '#1D2F2A', opacity: 0.6, marginBottom: 6 }}>
                   ⚠️ {lbl('Allergies', 'Allergies', 'Allergieën')}
                 </div>
                 <input type="text" value={allergyInput} onChange={e => setAllergyInput(e.target.value)}
@@ -343,14 +343,14 @@ export function InlinePreferences() {
             </div>
           </div>
 
-          <div style={{ height: 1, background: '#D9D2BF', opacity: 0.5 }} />
+          <div style={{ height: 1, background: '#C8DECE', opacity: 0.5 }} />
 
           {/* Step 4 — Budget */}
           <div>
             <StepLabel n={4} label={lbl('Weekly grocery budget', 'Budget courses / semaine', 'Weekelijks boodschappenbudget')} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', border: '1.5px solid #D9D2BF', borderRadius: 10, background: 'white', overflow: 'hidden' }}>
-                <span style={{ padding: '0 8px', fontSize: 13, color: '#3D2433', borderRight: '1px solid #D9D2BF' }}>€</span>
+              <div style={{ display: 'inline-flex', alignItems: 'center', border: '1.5px solid #C8DECE', borderRadius: 10, background: 'white', overflow: 'hidden' }}>
+                <span style={{ padding: '0 8px', fontSize: 13, color: '#1D2F2A', borderRight: '1px solid #C8DECE' }}>€</span>
                 <input
                   type="number"
                   min={0}
@@ -358,47 +358,47 @@ export function InlinePreferences() {
                   value={local.weeklyBudget ?? ''}
                   onChange={e => setLocal(p => ({ ...p, weeklyBudget: e.target.value ? Number(e.target.value) : undefined }))}
                   placeholder="—"
-                  style={{ width: 72, padding: '7px 10px', border: 'none', outline: 'none', fontSize: 13, color: '#2A1F1A', fontFamily: 'inherit', background: 'transparent' }}
+                  style={{ width: 72, padding: '7px 10px', border: 'none', outline: 'none', fontSize: 13, color: '#1D2F2A', fontFamily: 'inherit', background: 'transparent' }}
                 />
               </div>
               {local.weeklyBudget && (
-                <span style={{ fontSize: 11, color: '#5D7A3E', fontWeight: 500 }}>
+                <span style={{ fontSize: 11, color: '#2B6A47', fontWeight: 500 }}>
                   ≈ €{(local.weeklyBudget / 7).toFixed(0)}{lbl('/day', '/jour', '/dag')}
                 </span>
               )}
             </div>
           </div>
 
-          <div style={{ height: 1, background: '#D9D2BF', opacity: 0.5 }} />
+          <div style={{ height: 1, background: '#C8DECE', opacity: 0.5 }} />
 
           {/* Step 5 — Family size + Notes */}
           <div>
             <StepLabel n={5} label={lbl('Family & notes', 'Famille & notes', 'Gezin & notities')} />
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
               <div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#3D2433', opacity: 0.6, marginBottom: 8 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: '#1D2F2A', opacity: 0.6, marginBottom: 8 }}>
                   👥 {lbl('Family size', 'Taille de la famille', 'Gezinsgrootte')}
                 </div>
                 <div style={{
                   display: 'inline-flex', alignItems: 'center',
-                  border: '1.5px solid #D9D2BF', borderRadius: 12,
+                  border: '1.5px solid #C8DECE', borderRadius: 12,
                   overflow: 'hidden', background: 'white',
                 }}>
                   <button
                     onClick={() => setLocal(p => ({ ...p, familySize: Math.max(1, p.familySize - 1) }))}
-                    style={{ width: 40, height: 40, border: 'none', borderRight: '1px solid #D9D2BF', background: 'transparent', fontSize: 18, cursor: 'pointer', color: '#3D2433', fontWeight: 300 }}
+                    style={{ width: 40, height: 40, border: 'none', borderRight: '1px solid #C8DECE', background: 'transparent', fontSize: 18, cursor: 'pointer', color: '#1D2F2A', fontWeight: 300 }}
                   >−</button>
-                  <span style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: '#2A1F1A', width: 44, textAlign: 'center' as const, lineHeight: '40px' }}>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: '#1D2F2A', width: 44, textAlign: 'center' as const, lineHeight: '40px' }}>
                     {local.familySize}
                   </span>
                   <button
                     onClick={() => setLocal(p => ({ ...p, familySize: Math.min(12, p.familySize + 1) }))}
-                    style={{ width: 40, height: 40, border: 'none', borderLeft: '1px solid #D9D2BF', background: 'transparent', fontSize: 18, cursor: 'pointer', color: '#3D2433', fontWeight: 300 }}
+                    style={{ width: 40, height: 40, border: 'none', borderLeft: '1px solid #C8DECE', background: 'transparent', fontSize: 18, cursor: 'pointer', color: '#1D2F2A', fontWeight: 300 }}
                   >+</button>
                 </div>
               </div>
               <div style={{ flex: 1, minWidth: 180 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#3D2433', opacity: 0.6, marginBottom: 8 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: '#1D2F2A', opacity: 0.6, marginBottom: 8 }}>
                   📝 {lbl('Notes', 'Notes', 'Notities')}
                 </div>
                 <textarea
@@ -413,14 +413,14 @@ export function InlinePreferences() {
           </div>
 
           {/* Save / Reset */}
-          <div style={{ display: 'flex', gap: 8, paddingTop: 4, borderTop: '1.5px solid #D9D2BF' }}>
+          <div style={{ display: 'flex', gap: 8, paddingTop: 4, borderTop: '1.5px solid #C8DECE' }}>
             <button
               onClick={handleReset}
               style={{
                 padding: '10px 20px', borderRadius: 10,
-                border: '1.5px solid #D9D2BF',
+                border: '1.5px solid #C8DECE',
                 background: 'white',
-                fontSize: 13, color: '#3D2433',
+                fontSize: 13, color: '#1D2F2A',
                 cursor: 'pointer', fontFamily: 'inherit',
                 fontWeight: 500,
               }}
@@ -431,11 +431,11 @@ export function InlinePreferences() {
               onClick={handleSave}
               style={{
                 padding: '10px 28px', borderRadius: 10, border: 'none',
-                background: saved ? '#5D7A3E' : '#C73E2E',  // hex — no CSS var risk
+                background: saved ? '#2B6A47' : '#41A05F',  // hex — no CSS var risk
                 fontSize: 13, fontWeight: 700,
                 color: '#FFFFFF',                             // explicit white — always visible
                 cursor: 'pointer', fontFamily: 'inherit',
-                boxShadow: saved ? '0 2px 8px rgba(93,122,62,0.3)' : '0 2px 8px rgba(199,62,46,0.3)',
+                boxShadow: saved ? '0 2px 8px rgba(65,160,95,0.3)' : '0 2px 8px rgba(199,62,46,0.3)',
                 transition: 'background 0.3s',
                 display: 'flex', alignItems: 'center', gap: 6,
               }}
