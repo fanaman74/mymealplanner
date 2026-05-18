@@ -95,11 +95,11 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
               ))}
             </div>
           </div>
-        </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Apify API Token <span className="font-normal text-gray-400">(optional — for supermarket price search)</span>
+              Apify API Token{' '}
+              <span className="font-normal text-gray-400">(AH Belgium price search)</span>
             </label>
             <div className="relative">
               <input
@@ -122,6 +122,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
               <a href="https://console.apify.com" target="_blank" rel="noopener noreferrer" className="underline">console.apify.com</a>.
             </p>
           </div>
+        </div>
 
         <div className="mt-6 flex justify-end gap-2">
           <button
