@@ -12,10 +12,8 @@ const AUBERGINE = '#3D2433'
 const MIST    = '#D9D2BF'
 const PAPER   = '#FBF6EA'
 
-const COOK_VIDEO  = 'https://videos.pexels.com/video-files/4253899/4253899-hd_1280_720_25fps.mp4'
-const COOK_VIDEO2 = 'https://videos.pexels.com/video-files/3173305/3173305-hd_1920_1080_25fps.mp4'
-
-const CUISINES = ['🇫🇷 Française', '🇮🇹 Italienne', '🇯🇵 Japonaise', '🇲🇽 Mexicaine', '🥦 Végé', '🐟 Pescetarien', '🌱 Vegan', '+ 8 autres']
+const COOK_VIDEO  = 'https://videos.pexels.com/video-files/3773502/3773502-hd_1920_1080_30fps.mp4'
+const COOK_VIDEO2 = 'https://videos.pexels.com/video-files/4253899/4253899-hd_1280_720_25fps.mp4'
 
 function scrollToPlanner() {
   document.querySelector<HTMLElement>('[data-planner-action]')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -47,9 +45,7 @@ export function HeroEditorial() {
         .mmp-hero-cta-outline:hover {
           background: rgba(42,31,26,0.06);
         }
-        .mmp-hero-chip:hover {
-          background: ${MIST};
-        }
+
         @media (max-width: 860px) {
           .mmp-hero-grid { grid-template-columns: 1fr !important; }
           .mmp-hero-video-col { display: none !important; }
@@ -212,39 +208,6 @@ export function HeroEditorial() {
               </button>
             </div>
 
-            {/* Cuisine chips */}
-            <div style={{ marginTop: 36 }}>
-              <div style={{
-                fontSize: 10,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: AUBERGINE,
-                opacity: 0.65,
-                marginBottom: 10,
-                fontWeight: 600,
-              }}>
-                Adapté à votre cuisine
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-                {CUISINES.map((chip, i) => (
-                  <span
-                    key={i}
-                    className="mmp-hero-chip"
-                    style={{
-                      padding: '6px 12px',
-                      borderRadius: 999,
-                      background: PAPER,
-                      border: `1px solid ${MIST}`,
-                      fontSize: 12,
-                      cursor: 'default',
-                      transition: 'background 0.12s',
-                    }}
-                  >
-                    {chip}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* ── RIGHT: video card ── */}
