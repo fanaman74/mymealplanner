@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { X, ChefHat, Lightbulb } from 'lucide-react'
 import { Meal } from '@/lib/types'
 import { useLang } from '@/lib/i18n-context'
+import { usePlanner } from '@/lib/planner-context'
 
 interface Props {
   meal: Meal
@@ -13,6 +14,7 @@ interface Props {
 
 export function CookingInstructionsModal({ meal, onClose }: Props) {
   const { lang } = useLang()
+  const { model } = usePlanner()
   const [steps, setSteps] = useState<string[]>([])
   const [tips, setTips] = useState('')
   const [loading, setLoading] = useState(true)
@@ -25,7 +27,7 @@ export function CookingInstructionsModal({ meal, onClose }: Props) {
     fetch('/api/cooking-instructions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mealName: meal.name, ingredients: meal.ingredients, prepTime: meal.prepTime, lang }),
+      body: JSON.stringify({ mealName: meal.name, ingredients: meal.ingredients, prepTime: meal.prepTime, lang, model }),
     })
       .then(r => r.json())
       .then(data => {
@@ -37,7 +39,7 @@ export function CookingInstructionsModal({ meal, onClose }: Props) {
       .catch(() => { if (!cancelled) setError('Failed to load instructions') })
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
-  }, [meal.name, meal.ingredients, meal.prepTime, lang])
+  }, [meal.name, meal.ingredients, meal.prepTime, lang, model])
 
   return (
     <div

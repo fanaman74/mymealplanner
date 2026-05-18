@@ -7,6 +7,7 @@ interface RequestBody {
   ingredients: Ingredient[]
   prepTime?: string
   lang?: 'en' | 'fr' | 'nl'
+  model?: string
 }
 
 const LANG_INSTRUCTIONS: Record<string, string> = {
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const { mealName, ingredients, prepTime, lang = 'en' } = body
+  const { mealName, ingredients, prepTime, lang = 'en', model = 'anthropic/claude-3-haiku' } = body
   const apiKey = process.env.OPENROUTER_API_KEY || ''
   if (!apiKey) return NextResponse.json({ error: 'Missing API key' }, { status: 400 })
 
@@ -59,14 +60,16 @@ Generate 6-9 practical, easy-to-follow steps. No markdown, no preamble.`
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-haiku-4.5',
+        model,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
       }),
     })
 
     if (!res.ok) {
-      return NextResponse.json({ error: 'AI service error' }, { status: 502 })
+      const errText = await res.text()
+      console.error('OpenRouter error:', res.status, errText)
+      return NextResponse.json({ error: `AI service error (${res.status})` }, { status: 502 })
     }
 
     const data = await res.json()
