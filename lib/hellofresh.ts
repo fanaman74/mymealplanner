@@ -21,6 +21,7 @@ export function hfToMeal(hf: HFMeal): Meal {
     cuisine: hf.cuisines[0] ?? '',
     prepTime: `${hf.prepTime} min`,
     imageUrl: hf.imageUrl || undefined,
+    steps: hf.steps?.length ? hf.steps : undefined,
     ingredients: hf.ingredients.map(i => ({
       name: i.name.toLowerCase(),
       quantity: i.amount || 1,

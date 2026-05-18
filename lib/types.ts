@@ -31,6 +31,7 @@ export interface Meal {
   prepTime?: string
   cuisine?: string
   imageUrl?: string
+  steps?: string[]
 }
 
 export type DietType = 'omnivore' | 'vegetarian' | 'pescatarian' | 'vegan'

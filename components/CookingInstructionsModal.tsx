@@ -21,6 +21,12 @@ export function CookingInstructionsModal({ meal, onClose }: Props) {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    if (meal.steps?.length) {
+      setSteps(meal.steps)
+      setTips('')
+      setLoading(false)
+      return
+    }
     let cancelled = false
     setLoading(true)
     setError('')
@@ -39,7 +45,7 @@ export function CookingInstructionsModal({ meal, onClose }: Props) {
       .catch(() => { if (!cancelled) setError('Failed to load instructions') })
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
-  }, [meal.name, meal.ingredients, meal.prepTime, lang, model])
+  }, [meal.name, meal.steps, meal.ingredients, meal.prepTime, lang, model])
 
   return (
     <div

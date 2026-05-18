@@ -11,6 +11,7 @@ export interface HFMeal {
   tags: string[]
   ingredients: { name: string; amount: number; unit: string }[]
   servings: number
+  steps?: string[]
 }
 
 function parseIsoDuration(iso: string): number {
@@ -119,6 +120,13 @@ function mapHFItem(item: Record<string, unknown>): HFMeal {
     : []
   const servings = yields.length > 0 ? (yields[0].yields ?? 2) : 2
 
+  const steps = Array.isArray(item.steps)
+    ? (item.steps as Array<Record<string, unknown>>)
+        .sort((a, b) => Number(a.index ?? 0) - Number(b.index ?? 0))
+        .map(s => String(s.instructions ?? s.description ?? ''))
+        .filter(Boolean)
+    : undefined
+
   return {
     id: String(item.id ?? item._id ?? Math.random()),
     name: String(item.name ?? ''),
@@ -130,6 +138,7 @@ function mapHFItem(item: Record<string, unknown>): HFMeal {
     tags,
     ingredients,
     servings: Number(servings),
+    steps,
   }
 }
 
