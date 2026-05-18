@@ -62,7 +62,6 @@ Generate 6-9 practical, easy-to-follow steps. No markdown, no preamble.`
       body: JSON.stringify({
         model,
         messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
       }),
     })
 
@@ -73,8 +72,10 @@ Generate 6-9 practical, easy-to-follow steps. No markdown, no preamble.`
     }
 
     const data = await res.json()
-    const raw = data.choices?.[0]?.message?.content ?? '{}'
-    const parsed = JSON.parse(raw)
+    const raw: string = data.choices?.[0]?.message?.content ?? ''
+    // Extract JSON block from response (model may wrap in markdown)
+    const jsonMatch = raw.match(/\{[\s\S]*\}/)
+    const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {}
     const steps: string[] = Array.isArray(parsed.steps) ? parsed.steps : []
     const tips: string = typeof parsed.tips === 'string' ? parsed.tips : ''
 

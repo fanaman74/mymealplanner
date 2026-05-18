@@ -21,6 +21,7 @@ export function CookingInstructionsModal({ meal, onClose }: Props) {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    // Priority 1: HF native steps
     if (meal.steps?.length) {
       setSteps(meal.steps)
       setTips('')
@@ -30,17 +31,29 @@ export function CookingInstructionsModal({ meal, onClose }: Props) {
     let cancelled = false
     setLoading(true)
     setError('')
-    fetch('/api/cooking-instructions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mealName: meal.name, ingredients: meal.ingredients, prepTime: meal.prepTime, lang, model }),
-    })
+
+    // Priority 2: TheMealDB instructions (free, no AI cost)
+    fetch(`/api/meal-image?q=${encodeURIComponent(meal.name)}`)
       .then(r => r.json())
-      .then(data => {
+      .then(async (data) => {
         if (cancelled) return
-        if (data.error) { setError(data.error); return }
-        setSteps(data.steps ?? [])
-        setTips(data.tips ?? '')
+        if (data.steps?.length) {
+          setSteps(data.steps)
+          setTips('')
+          setLoading(false)
+          return
+        }
+        // Priority 3: AI generation
+        const res = await fetch('/api/cooking-instructions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mealName: meal.name, ingredients: meal.ingredients, prepTime: meal.prepTime, lang, model }),
+        })
+        const aiData = await res.json()
+        if (cancelled) return
+        if (aiData.error) { setError(aiData.error); return }
+        setSteps(aiData.steps ?? [])
+        setTips(aiData.tips ?? '')
       })
       .catch(() => { if (!cancelled) setError('Failed to load instructions') })
       .finally(() => { if (!cancelled) setLoading(false) })
