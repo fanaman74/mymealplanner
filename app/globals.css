@@ -1,18 +1,26 @@
 @import "tailwindcss";
 
-/* ── MealPlanner design tokens ───────────────────────── */
+/* ── MealPlanner design tokens (HelloFresh palette) ──── */
 :root {
-  --cream:      #F6EFE0;
-  --paper:      #FBF6EA;
-  --ink:        #2A1F1A;
-  --tomato:     #C73E2E;
-  --saffron:    #E8A93B;
-  --basil:      #5D7A3E;
-  --aubergine:  #3D2433;
-  --terracotta: #C97A4D;
-  --blush:      #F1C9B4;
-  --mist:       #D9D2BF;
-  --charcoal:   #1A1410;
+  /* HelloFresh greens */
+  --hf-green:   #41A05F;
+  --hf-dark:    #1D2F2A;
+  --hf-mid:     #2B6A47;
+  --hf-light:   #F4F6F3;
+  --hf-orange:  #FC9F37;
+
+  /* Semantic aliases (used throughout existing components) */
+  --cream:      #F4F6F3;
+  --paper:      #FFFFFF;
+  --ink:        #1D2F2A;
+  --tomato:     #41A05F;
+  --saffron:    #FC9F37;
+  --basil:      #2B6A47;
+  --aubergine:  #2B4A3D;
+  --terracotta: #E07A3D;
+  --blush:      #C8E6C9;
+  --mist:       #D8E8D8;
+  --charcoal:   #0E1E1A;
 
   --font-display: 'Instrument Serif', 'Times New Roman', serif;
   --font-body: system-ui, -apple-system, sans-serif;
@@ -44,13 +52,14 @@ body {
 
 /* ── Dark mode ───────────────────────────────────────── */
 body.dark {
-  --cream:      #1C1510;
-  --paper:      #251D18;
-  --ink:        #EDE5D5;
-  --mist:       #3A3028;
-  --aubergine:  #C4A8B8;
-  --charcoal:   #F0E8D8;
-  background: #1C1510;
+  --cream:      #0E1E1A;
+  --paper:      #162620;
+  --ink:        #E8F0E8;
+  --mist:       #2A3E35;
+  --aubergine:  #8ABDA0;
+  --charcoal:   #E8F0E8;
+  --hf-light:   #0E1E1A;
+  background: #0E1E1A;
   color: var(--ink);
 }
 

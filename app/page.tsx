@@ -1,8 +1,8 @@
 // app/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Dices, Trash2, Save, ListChecks, History, Settings, Moon, Sun } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Dices, Trash2, Save, ListChecks, History, Settings, Moon, Sun, ExternalLink } from 'lucide-react'
 import { PlannerProvider, usePlanner } from '@/lib/planner-context'
 import { I18nProvider, useLang } from '@/lib/i18n-context'
 import { t, Lang } from '@/lib/i18n'
@@ -86,11 +86,23 @@ interface PlannerAppProps {
 }
 
 function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
-  const { current, weekLoading, randomizeWeek, clearAll, saveSnapshot, storageAvailable } = usePlanner()
+  const { current, weekLoading, randomizeWeek, clearAll, saveSnapshot, storageAvailable, setMeal } = usePlanner()
   const { lang } = useLang()
   const strings = t(lang)
   const [shoppingList, setShoppingList] = useState<ShoppingList | null>(null)
   const [showHistory, setShowHistory] = useState(false)
+
+  // Apply HelloFresh meal selection from /hellofresh page
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem('hf_selection')
+      if (raw) {
+        const { day, meal } = JSON.parse(raw)
+        sessionStorage.removeItem('hf_selection')
+        if (day && meal) setMeal(day, { ...meal, id: meal.id ?? crypto.randomUUID() })
+      }
+    } catch { /* ignore */ }
+  }, [setMeal])
 
   function handleGenerateList() {
     setShoppingList(buildShoppingList(current))
@@ -112,56 +124,50 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
         </div>
       )}
 
-      {/* Header */}
+      {/* Header — HelloFresh style */}
       <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 30,
-        background: 'var(--cream)',
-        borderBottom: '1px solid var(--mist)',
-        padding: '10px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backdropFilter: 'blur(8px)',
+        position: 'sticky', top: 0, zIndex: 30,
+        background: '#FFFFFF',
+        borderBottom: '2px solid #41A05F',
+        padding: '0 24px', height: 60,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        boxShadow: '0 2px 12px rgba(29,47,42,0.08)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <LeafMotif size={20} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: '50%',
+            background: '#41A05F',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <LeafMotif size={16} color="#FFFFFF" />
+          </div>
           <h1 className="mmp-header-title" style={{
             fontFamily: 'var(--font-display)',
-            fontStyle: 'italic',
-            fontSize: 22,
-            color: 'var(--ink)',
-            margin: 0,
-            lineHeight: 1,
+            fontStyle: 'italic', fontSize: 20,
+            color: '#1D2F2A', margin: 0, lineHeight: 1,
           }}>
             MyMealPlanner
           </h1>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <DarkModeToggle />
           <LangToggle />
-          <button
-            onClick={() => setShowHistory(true)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 5,
-              padding: '5px 10px', borderRadius: 8, border: 'none',
-              background: 'transparent', fontSize: 12, color: 'var(--aubergine)', cursor: 'pointer',
-            }}
-          >
+          <button onClick={() => setShowHistory(true)} style={{
+            display: 'flex', alignItems: 'center', gap: 5,
+            padding: '6px 12px', borderRadius: 999, border: 'none',
+            background: 'transparent', fontSize: 12, color: '#2B4A3D', cursor: 'pointer',
+            fontWeight: 500,
+          }}>
             <History size={13} />
             <span className="mmp-header-btn-text">{strings.history}</span>
           </button>
-          <button
-            onClick={() => setShowSettings(true)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 5,
-              padding: '5px 10px', borderRadius: 8, border: 'none',
-              background: 'transparent', fontSize: 12, color: 'var(--aubergine)', cursor: 'pointer',
-            }}
-          >
-            <Settings size={13} />
+          <button onClick={() => setShowSettings(true)} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 34, height: 34, borderRadius: '50%', border: '1px solid #D8E8D8',
+            background: 'transparent', cursor: 'pointer', color: '#2B4A3D',
+          }}>
+            <Settings size={14} />
           </button>
         </div>
       </header>
@@ -169,6 +175,22 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
       <main style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 16px 40px' }}>
         {/* Animated supermarket hero */}
         <ParkingHero />
+
+        {/* HelloFresh meal picker */}
+        <div style={{ marginBottom: 16 }}>
+          <a href="/hellofresh" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '10px 20px', borderRadius: 999,
+            background: '#41A05F', color: '#FFFFFF',
+            fontSize: 13, fontWeight: 700, textDecoration: 'none',
+            boxShadow: '0 4px 12px rgba(65,160,95,0.35)',
+            transition: 'all 0.15s',
+          }}>
+            <span style={{ fontSize: 16 }}>🥗</span>
+            Browse HelloFresh meals
+            <ExternalLink size={12} />
+          </a>
+        </div>
 
         {/* Inline preferences */}
         <InlinePreferences />
