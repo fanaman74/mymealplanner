@@ -279,7 +279,7 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
         <WeekGrid />
 
         {/* Shopping list CTA */}
-        <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
+        <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
           <button
             onClick={handleGenerateList}
             style={{
@@ -294,6 +294,18 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
           >
             <ListChecks size={18} /> {strings.shoppingList}
           </button>
+          <a
+            href="/shopping"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '14px 28px', borderRadius: 16,
+              background: '#fff', border: '2px solid var(--basil)',
+              color: 'var(--basil)', fontSize: 15, fontWeight: 600,
+              textDecoration: 'none', fontFamily: 'inherit',
+            }}
+          >
+            🏪 Compare supermarket prices
+          </a>
         </div>
       </main>
 
