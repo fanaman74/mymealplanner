@@ -56,6 +56,7 @@ export function MealCard({
 
   useEffect(() => {
     if (!meal?.name) { setImgUrl(null); return }
+    if (meal.imageUrl) { setImgUrl(meal.imageUrl); return }
     let cancelled = false
     setImgUrl(null)
     fetch(`/api/meal-image?q=${encodeURIComponent(meal.name)}`)
@@ -63,7 +64,7 @@ export function MealCard({
       .then(d => { if (!cancelled) setImgUrl(d.imageUrl ?? null) })
       .catch(() => {})
     return () => { cancelled = true }
-  }, [meal?.name])
+  }, [meal?.name, meal?.imageUrl])
   const dayLabel = strings.days[longKey]
   const dayShort = strings.daysShort[longKey]
 

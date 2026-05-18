@@ -20,6 +20,7 @@ export function hfToMeal(hf: HFMeal): Meal {
     name: hf.name,
     cuisine: hf.cuisines[0] ?? '',
     prepTime: `${hf.prepTime} min`,
+    imageUrl: hf.imageUrl || undefined,
     ingredients: hf.ingredients.map(i => ({
       name: i.name.toLowerCase(),
       quantity: i.amount || 1,

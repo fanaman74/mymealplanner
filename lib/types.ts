@@ -30,6 +30,7 @@ export interface Meal {
   ingredients: Ingredient[]
   prepTime?: string
   cuisine?: string
+  imageUrl?: string
 }
 
 export type DietType = 'omnivore' | 'vegetarian' | 'pescatarian' | 'vegan'
