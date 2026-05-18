@@ -167,8 +167,12 @@ export function PlannerProvider({ children, onError, openSettings }: PlannerProv
           if (picked.length === 7) break
         }
       }
-      // Pad with repeats if fewer than 7 unique meals available
-      while (picked.length < 7) picked.push({ ...shuffled[0], id: crypto.randomUUID() })
+      // Pad with remaining shuffled meals (cycling) if fewer than 7 unique
+      let padIdx = 0
+      while (picked.length < 7) {
+        picked.push({ ...shuffled[padIdx % shuffled.length], id: crypto.randomUUID() })
+        padIdx++
+      }
       const days = Object.fromEntries(WEEKDAYS.map((d, i) => [d, picked[i]])) as Record<Weekday, Meal>
       setState(s => ({ ...s, current: { ...s.current, days } }))
     } catch {

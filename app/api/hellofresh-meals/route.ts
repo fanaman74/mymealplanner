@@ -229,14 +229,15 @@ export async function GET(request: NextRequest) {
 
   // Client-side filter mock meals by diet/cuisine when API unavailable
   if (meals.length === 0) {
-    meals = MOCK_MEALS.filter(m => {
+    const filtered = MOCK_MEALS.filter(m => {
       if (dietType === 'vegetarian' && !m.tags.some(t => /vegetarian/i.test(t))) return false
       if (dietType === 'vegan' && !m.tags.some(t => /vegan/i.test(t))) return false
       if (dietType === 'pescatarian' && !m.tags.some(t => /seafood|fish|pescatarian/i.test(t))) return false
       if (cuisines.length > 0 && !cuisines.some(c => m.cuisines.some(mc => mc.toLowerCase() === c.toLowerCase()))) return false
       return true
     })
-    if (meals.length === 0) meals = MOCK_MEALS
+    // Need at least 7 unique meals — fall back to full set if filtered too few
+    meals = filtered.length >= 7 ? filtered : MOCK_MEALS
   }
 
   return NextResponse.json({ meals })
