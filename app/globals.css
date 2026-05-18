@@ -35,10 +35,23 @@
 }
 
 body {
-  background: var(--cream);
+  background: #FFFFFF;
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* ── Dark mode ───────────────────────────────────────── */
+body.dark {
+  --cream:      #1C1510;
+  --paper:      #251D18;
+  --ink:        #EDE5D5;
+  --mist:       #3A3028;
+  --aubergine:  #C4A8B8;
+  --charcoal:   #F0E8D8;
+  background: #1C1510;
+  color: var(--ink);
 }
 
 /* ── Responsive ───────────────────────────────────────── */

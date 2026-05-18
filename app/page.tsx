@@ -1,8 +1,8 @@
 // app/page.tsx
 'use client'
 
-import { useState } from 'react'
-import { Dices, Trash2, Save, ListChecks, History, Settings } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Dices, Trash2, Save, ListChecks, History, Settings, Moon, Sun } from 'lucide-react'
 import { PlannerProvider, usePlanner } from '@/lib/planner-context'
 import { I18nProvider, useLang } from '@/lib/i18n-context'
 import { t, Lang } from '@/lib/i18n'
@@ -22,6 +22,29 @@ const LANGS: { code: Lang; label: string }[] = [
   { code: 'fr', label: 'FR' },
   { code: 'nl', label: 'NL' },
 ]
+
+function DarkModeToggle() {
+  const [dark, setDark] = useState(false)
+  useEffect(() => {
+    const stored = localStorage.getItem('mmp-dark')
+    if (stored === '1') { document.body.classList.add('dark'); setDark(true) }
+  }, [])
+  function toggle() {
+    const next = !dark
+    setDark(next)
+    document.body.classList.toggle('dark', next)
+    localStorage.setItem('mmp-dark', next ? '1' : '0')
+  }
+  return (
+    <button onClick={toggle} style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      width: 32, height: 32, borderRadius: 8, border: 'none',
+      background: 'transparent', cursor: 'pointer', color: 'var(--aubergine)',
+    }}>
+      {dark ? <Sun size={15} /> : <Moon size={15} />}
+    </button>
+  )
+}
 
 function LangToggle() {
   const { lang, setLang } = useLang()
@@ -74,7 +97,7 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
+    <div style={{ minHeight: '100vh' }}>
       {/* Storage warning */}
       {!storageAvailable && (
         <div style={{
@@ -117,6 +140,7 @@ function PlannerApp({ showSettings, setShowSettings }: PlannerAppProps) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <DarkModeToggle />
           <LangToggle />
           <button
             onClick={() => setShowHistory(true)}

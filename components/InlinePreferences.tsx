@@ -127,7 +127,7 @@ export function InlinePreferences() {
       allergies: allergyInput.split(',').map(s => s.trim()).filter(Boolean),
     })
     setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    setTimeout(() => { setSaved(false); setOpen(false) }, 1200)
   }
 
   function handleReset() {
