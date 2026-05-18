@@ -154,22 +154,43 @@ export function buildShoppingList(plan: WeekPlan): ShoppingList {
   return { categories, generatedAt: new Date().toISOString() }
 }
 
+const CATEGORY_EMOJI: Record<string, string> = {
+  produce: '🥦', meat: '🥩', fish: '🐟', dairy: '🥛',
+  pantry: '🫙', bakery: '🍞', frozen: '🧊', other: '📦',
+}
+
 export function shoppingListToText(list: ShoppingList): string {
-  return list.categories
+  const date = new Date().toLocaleDateString('en-BE', { year: 'numeric', month: 'long', day: 'numeric' })
+  const line = '═'.repeat(40)
+  const thin = '─'.repeat(40)
+  const header = [
+    line,
+    '  🥗 MyMealPlanner — Shopping List',
+    `  ${date}`,
+    line,
+  ].join('\n')
+
+  const body = list.categories
+    .filter(c => c.items.length > 0)
     .map(cat => {
-      const header = cat.name.toUpperCase()
-      const rows = cat.items.map(i => `  ${i.name}: ${i.quantity} ${i.unit}`).join('\n')
-      return `${header}\n${rows}`
+      const emoji = CATEGORY_EMOJI[cat.name] ?? '📦'
+      const catHeader = `\n${emoji}  ${cat.name.toUpperCase()}\n${thin}`
+      const rows = cat.items.map(i => `  □  ${i.name.padEnd(28)} ${i.quantity} ${i.unit}`).join('\n')
+      return `${catHeader}\n${rows}`
     })
-    .join('\n\n')
+    .join('\n')
+
+  return `${header}\n${body}\n\n${line}`
 }
 
 export function shoppingListToCsv(list: ShoppingList): string {
-  const rows = ['name,quantity,unit,category']
+  // UTF-8 BOM for Excel compatibility
+  const BOM = '﻿'
+  const rows = ['Category,Item,Quantity,Unit']
   for (const cat of list.categories) {
     for (const item of cat.items) {
-      rows.push(`"${item.name}",${item.quantity},${item.unit},${cat.name}`)
+      rows.push(`"${cat.name}","${item.name}",${item.quantity},"${item.unit}"`)
     }
   }
-  return rows.join('\n')
+  return BOM + rows.join('\n')
 }
