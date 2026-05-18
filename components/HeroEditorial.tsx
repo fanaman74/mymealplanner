@@ -12,8 +12,8 @@ const AUBERGINE = '#3D2433'
 const MIST    = '#D9D2BF'
 const PAPER   = '#FBF6EA'
 
-const COOK_VIDEO  = 'https://videos.pexels.com/video-files/3773502/3773502-hd_1920_1080_30fps.mp4'
-const COOK_VIDEO2 = 'https://videos.pexels.com/video-files/4253899/4253899-hd_1280_720_25fps.mp4'
+const COOK_VIDEO  = 'https://cdn.coverr.co/videos/coverr-woman-getting-ready-to-bake-5751/1080p.mp4'
+const COOK_VIDEO2 = 'https://cdn.coverr.co/videos/coverr-woman-cooking-in-the-kitchen-3837/1080p.mp4'
 
 function scrollToPlanner() {
   document.querySelector<HTMLElement>('[data-planner-action]')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
