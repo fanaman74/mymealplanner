@@ -23,128 +23,73 @@ function parseIsoDuration(iso: string): number {
 }
 
 const MOCK_MEALS: HFMeal[] = [
-  {
-    id: 'mock-1',
-    name: 'Poulet Rôti aux Herbes de Provence',
-    description:
-      'Tender roasted chicken with fragrant Provençal herbs, served with golden roasted potatoes and a light pan jus.',
-    imageUrl:
-      'https://img.hellofresh.com/hellofresh_s3/image/upload/f_auto,fl_lossy,q_auto,w_500/hellofresh_website/us/cms-content/2022/03/14113923/HF220221_R_W10_US_PD_6702-low-0.jpg',
-    prepTime: 40,
-    difficulty: 'Easy',
-    cuisines: ['French'],
-    tags: ['Family Friendly', 'Classic'],
-    ingredients: [
-      { name: 'Chicken thighs', amount: 4, unit: 'pieces' },
-      { name: 'Potatoes', amount: 500, unit: 'g' },
-      { name: 'Herbes de Provence', amount: 2, unit: 'tbsp' },
-      { name: 'Olive oil', amount: 3, unit: 'tbsp' },
-      { name: 'Garlic', amount: 4, unit: 'cloves' },
-    ],
-    servings: 2,
-  },
-  {
-    id: 'mock-2',
-    name: 'Spaghetti Carbonara Classique',
-    description:
-      'The Roman classic done right — silky egg-and-Pecorino sauce, crispy guanciale, and freshly cracked black pepper.',
-    imageUrl:
-      'https://img.hellofresh.com/hellofresh_s3/image/upload/f_auto,fl_lossy,q_auto,w_500/hellofresh_website/us/cms-content/2022/05/17115707/HF_APR22_R_W20_US_PD_7306-High-Res.jpg',
-    prepTime: 25,
-    difficulty: 'Medium',
-    cuisines: ['Italian'],
-    tags: ['Quick', 'Comfort Food'],
-    ingredients: [
-      { name: 'Spaghetti', amount: 200, unit: 'g' },
-      { name: 'Pancetta', amount: 150, unit: 'g' },
-      { name: 'Eggs', amount: 3, unit: 'pieces' },
-      { name: 'Pecorino Romano', amount: 60, unit: 'g' },
-      { name: 'Black pepper', amount: 1, unit: 'tsp' },
-    ],
-    servings: 2,
-  },
-  {
-    id: 'mock-3',
-    name: 'Waterzooi de Poulet Gantois',
-    description:
-      "Belgium's beloved Ghent-style chicken stew with vegetables in a rich creamy broth — pure comfort in a bowl.",
-    imageUrl:
-      'https://img.hellofresh.com/hellofresh_s3/image/upload/f_auto,fl_lossy,q_auto,w_500/hellofresh_website/us/cms-content/2022/01/25155950/HF_JAN22_R_W05_US_PD_6553-High-Res.jpg',
-    prepTime: 45,
-    difficulty: 'Medium',
-    cuisines: ['Belgian'],
-    tags: ['Traditional', 'Hearty'],
-    ingredients: [
-      { name: 'Chicken pieces', amount: 600, unit: 'g' },
-      { name: 'Carrots', amount: 2, unit: 'pieces' },
-      { name: 'Leeks', amount: 2, unit: 'pieces' },
-      { name: 'Cream', amount: 200, unit: 'ml' },
-      { name: 'Potatoes', amount: 400, unit: 'g' },
-      { name: 'Celery', amount: 2, unit: 'stalks' },
-    ],
-    servings: 4,
-  },
-  {
-    id: 'mock-4',
-    name: 'Moules-Frites Belges',
-    description:
-      'Classic Belgian mussels steamed in white wine, shallots, and parsley — served with crispy golden fries.',
-    imageUrl:
-      'https://img.hellofresh.com/hellofresh_s3/image/upload/f_auto,fl_lossy,q_auto,w_500/hellofresh_website/us/cms-content/2022/08/22135251/HF_AUG22_R_W34_US_PD_8065-High-Res.jpg',
-    prepTime: 30,
-    difficulty: 'Easy',
-    cuisines: ['Belgian'],
-    tags: ['Seafood', 'Classic'],
-    ingredients: [
-      { name: 'Mussels', amount: 1, unit: 'kg' },
-      { name: 'Shallots', amount: 3, unit: 'pieces' },
-      { name: 'White wine', amount: 150, unit: 'ml' },
-      { name: 'Parsley', amount: 1, unit: 'bunch' },
-      { name: 'Fries', amount: 400, unit: 'g' },
-    ],
-    servings: 2,
-  },
-  {
-    id: 'mock-5',
-    name: 'Risotto ai Funghi Porcini',
-    description:
-      'Creamy Arborio rice slowly cooked with dried porcini mushrooms, white wine, Parmesan, and a touch of truffle.',
-    imageUrl:
-      'https://img.hellofresh.com/hellofresh_s3/image/upload/f_auto,fl_lossy,q_auto,w_500/hellofresh_website/us/cms-content/2022/10/17160614/HF_OCT22_R_W43_US_PD_8826-High-Res.jpg',
-    prepTime: 35,
-    difficulty: 'Medium',
-    cuisines: ['Italian'],
-    tags: ['Vegetarian', 'Comfort Food'],
-    ingredients: [
-      { name: 'Arborio rice', amount: 300, unit: 'g' },
-      { name: 'Porcini mushrooms', amount: 30, unit: 'g' },
-      { name: 'Parmesan', amount: 80, unit: 'g' },
-      { name: 'White wine', amount: 100, unit: 'ml' },
-      { name: 'Vegetable stock', amount: 1, unit: 'L' },
-      { name: 'Shallots', amount: 2, unit: 'pieces' },
-    ],
-    servings: 2,
-  },
-  {
-    id: 'mock-6',
-    name: 'Stoemp aux Carottes et Lardons',
-    description:
-      "Classic Belgian mashed potato and carrot stoemp with smoky bacon lardons — the ultimate winter comfort food.",
-    imageUrl:
-      'https://img.hellofresh.com/hellofresh_s3/image/upload/f_auto,fl_lossy,q_auto,w_500/hellofresh_website/us/cms-content/2022/02/14153308/HF_FEB22_R_W08_US_PD_6740-High-Res.jpg',
-    prepTime: 35,
-    difficulty: 'Easy',
-    cuisines: ['Belgian'],
-    tags: ['Traditional', 'Family Friendly'],
-    ingredients: [
-      { name: 'Potatoes', amount: 600, unit: 'g' },
-      { name: 'Carrots', amount: 300, unit: 'g' },
-      { name: 'Lardons', amount: 150, unit: 'g' },
-      { name: 'Butter', amount: 50, unit: 'g' },
-      { name: 'Milk', amount: 100, unit: 'ml' },
-    ],
-    servings: 2,
-  },
+  // ── French ──────────────────────────────────────────────────────
+  { id: 'm-fr-1', name: 'Poulet Rôti aux Herbes de Provence', description: 'Roasted chicken with Provençal herbs and golden potatoes.', imageUrl: '', prepTime: 40, difficulty: 'Easy', cuisines: ['French'], tags: ['Family Friendly', 'Classic'],
+    ingredients: [{ name: 'chicken thighs', amount: 4, unit: 'pcs' }, { name: 'potatoes', amount: 500, unit: 'g' }, { name: 'herbes de provence', amount: 2, unit: 'tbsp' }, { name: 'olive oil', amount: 3, unit: 'tbsp' }, { name: 'garlic', amount: 4, unit: 'pcs' }], servings: 4 },
+  { id: 'm-fr-2', name: 'Boeuf Bourguignon', description: 'Slow-braised beef in Burgundy wine with mushrooms, pearl onions and lardons.', imageUrl: '', prepTime: 90, difficulty: 'Medium', cuisines: ['French'], tags: ['Hearty', 'Classic'],
+    ingredients: [{ name: 'beef chuck', amount: 800, unit: 'g' }, { name: 'red wine', amount: 500, unit: 'ml' }, { name: 'mushrooms', amount: 200, unit: 'g' }, { name: 'pearl onions', amount: 150, unit: 'g' }, { name: 'lardons', amount: 100, unit: 'g' }], servings: 4 },
+  // ── Italian ──────────────────────────────────────────────────────
+  { id: 'm-it-1', name: 'Spaghetti Carbonara', description: 'Silky egg-and-Pecorino sauce with crispy pancetta and black pepper.', imageUrl: '', prepTime: 25, difficulty: 'Medium', cuisines: ['Italian'], tags: ['Quick', 'Comfort Food'],
+    ingredients: [{ name: 'spaghetti', amount: 200, unit: 'g' }, { name: 'pancetta', amount: 150, unit: 'g' }, { name: 'eggs', amount: 3, unit: 'pcs' }, { name: 'pecorino romano', amount: 60, unit: 'g' }, { name: 'black pepper', amount: 1, unit: 'tsp' }], servings: 2 },
+  { id: 'm-it-2', name: 'Lasagne al Forno', description: 'Layers of fresh pasta, rich meat ragù, and béchamel baked golden.', imageUrl: '', prepTime: 70, difficulty: 'Medium', cuisines: ['Italian'], tags: ['Family Friendly', 'Comfort Food'],
+    ingredients: [{ name: 'lasagne sheets', amount: 250, unit: 'g' }, { name: 'ground beef', amount: 400, unit: 'g' }, { name: 'tomato sauce', amount: 400, unit: 'ml' }, { name: 'béchamel sauce', amount: 300, unit: 'ml' }, { name: 'parmesan', amount: 80, unit: 'g' }], servings: 4 },
+  { id: 'm-it-3', name: 'Risotto ai Funghi Porcini', description: 'Creamy Arborio rice with porcini mushrooms, white wine, and Parmesan.', imageUrl: '', prepTime: 35, difficulty: 'Medium', cuisines: ['Italian'], tags: ['Vegetarian', 'Comfort Food'],
+    ingredients: [{ name: 'arborio rice', amount: 300, unit: 'g' }, { name: 'porcini mushrooms', amount: 30, unit: 'g' }, { name: 'parmesan', amount: 80, unit: 'g' }, { name: 'white wine', amount: 100, unit: 'ml' }, { name: 'vegetable stock', amount: 1, unit: 'l' }], servings: 2 },
+  // ── Belgian ──────────────────────────────────────────────────────
+  { id: 'm-be-1', name: 'Waterzooi de Poulet Gantois', description: "Ghent-style chicken stew in a rich creamy vegetable broth.", imageUrl: '', prepTime: 45, difficulty: 'Medium', cuisines: ['Belgian'], tags: ['Traditional', 'Hearty'],
+    ingredients: [{ name: 'chicken pieces', amount: 600, unit: 'g' }, { name: 'carrots', amount: 2, unit: 'pcs' }, { name: 'leeks', amount: 2, unit: 'pcs' }, { name: 'cream', amount: 200, unit: 'ml' }, { name: 'potatoes', amount: 400, unit: 'g' }], servings: 4 },
+  { id: 'm-be-2', name: 'Moules-Frites Belges', description: 'Mussels steamed in white wine with shallots, served with golden fries.', imageUrl: '', prepTime: 30, difficulty: 'Easy', cuisines: ['Belgian'], tags: ['Seafood', 'Pescatarian', 'Classic'],
+    ingredients: [{ name: 'mussels', amount: 1, unit: 'kg' }, { name: 'shallots', amount: 3, unit: 'pcs' }, { name: 'white wine', amount: 150, unit: 'ml' }, { name: 'parsley', amount: 1, unit: 'pcs' }, { name: 'fries', amount: 400, unit: 'g' }], servings: 2 },
+  // ── Spanish ──────────────────────────────────────────────────────
+  { id: 'm-es-1', name: 'Paella Valenciana', description: 'Saffron-infused rice with chicken, chorizo, and shellfish from Valencia.', imageUrl: '', prepTime: 55, difficulty: 'Medium', cuisines: ['Spanish'], tags: ['Family Friendly', 'Seafood', 'Pescatarian'],
+    ingredients: [{ name: 'paella rice', amount: 300, unit: 'g' }, { name: 'chicken thighs', amount: 400, unit: 'g' }, { name: 'prawns', amount: 200, unit: 'g' }, { name: 'saffron', amount: 1, unit: 'tsp' }, { name: 'paprika', amount: 2, unit: 'tsp' }], servings: 4 },
+  { id: 'm-es-2', name: 'Tortilla Española', description: 'Classic Spanish potato and egg omelette — simple, golden, perfect.', imageUrl: '', prepTime: 35, difficulty: 'Easy', cuisines: ['Spanish'], tags: ['Vegetarian', 'Quick'],
+    ingredients: [{ name: 'eggs', amount: 6, unit: 'pcs' }, { name: 'potatoes', amount: 500, unit: 'g' }, { name: 'onion', amount: 1, unit: 'pcs' }, { name: 'olive oil', amount: 4, unit: 'tbsp' }, { name: 'salt', amount: 1, unit: 'tsp' }], servings: 4 },
+  // ── Greek ────────────────────────────────────────────────────────
+  { id: 'm-gr-1', name: 'Moussaka', description: 'Layers of spiced lamb mince, aubergine, and creamy béchamel.', imageUrl: '', prepTime: 75, difficulty: 'Hard', cuisines: ['Greek'], tags: ['Hearty', 'Classic'],
+    ingredients: [{ name: 'ground lamb', amount: 500, unit: 'g' }, { name: 'aubergine', amount: 2, unit: 'pcs' }, { name: 'tomato sauce', amount: 300, unit: 'ml' }, { name: 'béchamel', amount: 300, unit: 'ml' }, { name: 'cinnamon', amount: 1, unit: 'tsp' }], servings: 4 },
+  { id: 'm-gr-2', name: 'Chicken Souvlaki', description: 'Grilled chicken skewers with tzatziki, pita, and a fresh Greek salad.', imageUrl: '', prepTime: 30, difficulty: 'Easy', cuisines: ['Greek'], tags: ['Quick', 'Grilled'],
+    ingredients: [{ name: 'chicken breast', amount: 600, unit: 'g' }, { name: 'lemon', amount: 2, unit: 'pcs' }, { name: 'oregano', amount: 2, unit: 'tsp' }, { name: 'tzatziki', amount: 200, unit: 'g' }, { name: 'pita bread', amount: 4, unit: 'pcs' }], servings: 4 },
+  // ── Turkish ──────────────────────────────────────────────────────
+  { id: 'm-tr-1', name: 'Köfte & Bulgur Pilav', description: 'Spiced lamb meatballs over fluffy bulgur wheat with roasted tomatoes.', imageUrl: '', prepTime: 35, difficulty: 'Easy', cuisines: ['Turkish'], tags: ['Family Friendly'],
+    ingredients: [{ name: 'ground lamb', amount: 400, unit: 'g' }, { name: 'bulgur wheat', amount: 200, unit: 'g' }, { name: 'cumin', amount: 2, unit: 'tsp' }, { name: 'paprika', amount: 1, unit: 'tsp' }, { name: 'tomatoes', amount: 3, unit: 'pcs' }], servings: 4 },
+  { id: 'm-tr-2', name: 'İmam Bayıldı', description: 'Braised aubergines stuffed with caramelised onions, tomatoes and herbs.', imageUrl: '', prepTime: 50, difficulty: 'Medium', cuisines: ['Turkish'], tags: ['Vegetarian', 'Vegan'],
+    ingredients: [{ name: 'aubergine', amount: 3, unit: 'pcs' }, { name: 'onion', amount: 2, unit: 'pcs' }, { name: 'tomatoes', amount: 4, unit: 'pcs' }, { name: 'garlic', amount: 4, unit: 'pcs' }, { name: 'olive oil', amount: 5, unit: 'tbsp' }], servings: 4 },
+  // ── Asian ────────────────────────────────────────────────────────
+  { id: 'm-as-1', name: 'Beef & Broccoli Stir-fry', description: 'Tender beef strips and crisp broccoli in a savory oyster sauce glaze.', imageUrl: '', prepTime: 25, difficulty: 'Easy', cuisines: ['Asian'], tags: ['Quick', 'Family Friendly'],
+    ingredients: [{ name: 'beef sirloin', amount: 400, unit: 'g' }, { name: 'broccoli', amount: 300, unit: 'g' }, { name: 'oyster sauce', amount: 3, unit: 'tbsp' }, { name: 'soy sauce', amount: 2, unit: 'tbsp' }, { name: 'jasmine rice', amount: 200, unit: 'g' }], servings: 2 },
+  { id: 'm-as-2', name: 'Vegetable Fried Rice', description: 'Wok-fried rice with egg, vegetables, and a splash of soy and sesame.', imageUrl: '', prepTime: 20, difficulty: 'Easy', cuisines: ['Asian'], tags: ['Vegetarian', 'Quick'],
+    ingredients: [{ name: 'cooked rice', amount: 400, unit: 'g' }, { name: 'eggs', amount: 3, unit: 'pcs' }, { name: 'mixed vegetables', amount: 250, unit: 'g' }, { name: 'soy sauce', amount: 3, unit: 'tbsp' }, { name: 'sesame oil', amount: 1, unit: 'tbsp' }], servings: 2 },
+  // ── Japanese ─────────────────────────────────────────────────────
+  { id: 'm-jp-1', name: 'Teriyaki Salmon', description: 'Glazed salmon with homemade teriyaki sauce, steamed rice, and edamame.', imageUrl: '', prepTime: 25, difficulty: 'Easy', cuisines: ['Japanese'], tags: ['Pescatarian', 'Quick'],
+    ingredients: [{ name: 'salmon fillet', amount: 4, unit: 'pcs' }, { name: 'soy sauce', amount: 3, unit: 'tbsp' }, { name: 'mirin', amount: 2, unit: 'tbsp' }, { name: 'honey', amount: 1, unit: 'tbsp' }, { name: 'jasmine rice', amount: 200, unit: 'g' }], servings: 2 },
+  { id: 'm-jp-2', name: 'Tonkotsu Ramen', description: 'Rich pork bone broth with chashu pork, soft-boiled egg, and noodles.', imageUrl: '', prepTime: 40, difficulty: 'Medium', cuisines: ['Japanese'], tags: ['Hearty', 'Comfort Food'],
+    ingredients: [{ name: 'ramen noodles', amount: 200, unit: 'g' }, { name: 'pork belly', amount: 300, unit: 'g' }, { name: 'soy sauce', amount: 3, unit: 'tbsp' }, { name: 'eggs', amount: 2, unit: 'pcs' }, { name: 'spring onion', amount: 3, unit: 'pcs' }], servings: 2 },
+  // ── Thai ─────────────────────────────────────────────────────────
+  { id: 'm-th-1', name: 'Pad Thai', description: 'Stir-fried rice noodles with shrimp, egg, bean sprouts and peanuts.', imageUrl: '', prepTime: 30, difficulty: 'Medium', cuisines: ['Thai'], tags: ['Quick', 'Pescatarian'],
+    ingredients: [{ name: 'rice noodles', amount: 200, unit: 'g' }, { name: 'shrimp', amount: 200, unit: 'g' }, { name: 'eggs', amount: 2, unit: 'pcs' }, { name: 'fish sauce', amount: 2, unit: 'tbsp' }, { name: 'peanuts', amount: 50, unit: 'g' }], servings: 2 },
+  { id: 'm-th-2', name: 'Green Curry with Tofu', description: 'Fragrant coconut green curry with tofu, courgette and Thai basil.', imageUrl: '', prepTime: 30, difficulty: 'Easy', cuisines: ['Thai'], tags: ['Vegetarian', 'Vegan'],
+    ingredients: [{ name: 'firm tofu', amount: 300, unit: 'g' }, { name: 'coconut milk', amount: 400, unit: 'ml' }, { name: 'green curry paste', amount: 2, unit: 'tbsp' }, { name: 'courgette', amount: 1, unit: 'pcs' }, { name: 'thai basil', amount: 1, unit: 'pcs' }], servings: 2 },
+  // ── Indian ───────────────────────────────────────────────────────
+  { id: 'm-in-1', name: 'Butter Chicken', description: 'Tender chicken in a velvety tomato-cream sauce with warming spices.', imageUrl: '', prepTime: 40, difficulty: 'Easy', cuisines: ['Indian'], tags: ['Family Friendly', 'Comfort Food'],
+    ingredients: [{ name: 'chicken breast', amount: 600, unit: 'g' }, { name: 'tomato purée', amount: 400, unit: 'ml' }, { name: 'cream', amount: 150, unit: 'ml' }, { name: 'garam masala', amount: 2, unit: 'tsp' }, { name: 'basmati rice', amount: 200, unit: 'g' }], servings: 4 },
+  { id: 'm-in-2', name: 'Dal Tadka', description: 'Yellow lentils tempered with cumin, garlic, and chilli — served with naan.', imageUrl: '', prepTime: 35, difficulty: 'Easy', cuisines: ['Indian'], tags: ['Vegetarian', 'Vegan'],
+    ingredients: [{ name: 'yellow lentils', amount: 250, unit: 'g' }, { name: 'cumin seeds', amount: 1, unit: 'tsp' }, { name: 'garlic', amount: 4, unit: 'pcs' }, { name: 'turmeric', amount: 1, unit: 'tsp' }, { name: 'naan bread', amount: 4, unit: 'pcs' }], servings: 4 },
+  // ── Mexican ──────────────────────────────────────────────────────
+  { id: 'm-mx-1', name: 'Tacos al Pastor', description: 'Marinated pork with pineapple, cilantro and salsa in soft corn tortillas.', imageUrl: '', prepTime: 35, difficulty: 'Easy', cuisines: ['Mexican'], tags: ['Quick', 'Family Friendly'],
+    ingredients: [{ name: 'pork shoulder', amount: 500, unit: 'g' }, { name: 'corn tortillas', amount: 8, unit: 'pcs' }, { name: 'pineapple', amount: 150, unit: 'g' }, { name: 'chipotle paste', amount: 2, unit: 'tbsp' }, { name: 'cilantro', amount: 1, unit: 'pcs' }], servings: 4 },
+  { id: 'm-mx-2', name: 'Black Bean Enchiladas', description: 'Soft tortillas stuffed with spiced black beans and smothered in salsa.', imageUrl: '', prepTime: 40, difficulty: 'Easy', cuisines: ['Mexican'], tags: ['Vegetarian', 'Vegan'],
+    ingredients: [{ name: 'black beans', amount: 400, unit: 'g' }, { name: 'flour tortillas', amount: 8, unit: 'pcs' }, { name: 'enchilada sauce', amount: 400, unit: 'ml' }, { name: 'cumin', amount: 2, unit: 'tsp' }, { name: 'avocado', amount: 2, unit: 'pcs' }], servings: 4 },
+  // ── American ─────────────────────────────────────────────────────
+  { id: 'm-us-1', name: 'Classic Smash Burger', description: 'Double smash patties with American cheese, pickles, and special sauce.', imageUrl: '', prepTime: 20, difficulty: 'Easy', cuisines: ['American'], tags: ['Quick', 'Family Friendly'],
+    ingredients: [{ name: 'ground beef', amount: 400, unit: 'g' }, { name: 'burger buns', amount: 4, unit: 'pcs' }, { name: 'american cheese', amount: 4, unit: 'pcs' }, { name: 'pickles', amount: 8, unit: 'pcs' }, { name: 'mustard', amount: 2, unit: 'tbsp' }], servings: 4 },
+  { id: 'm-us-2', name: 'BBQ Baby Back Ribs', description: 'Slow-cooked pork ribs glazed with smoky BBQ sauce and served with slaw.', imageUrl: '', prepTime: 120, difficulty: 'Medium', cuisines: ['American'], tags: ['Hearty', 'Family Friendly'],
+    ingredients: [{ name: 'pork ribs', amount: 1, unit: 'kg' }, { name: 'bbq sauce', amount: 300, unit: 'ml' }, { name: 'brown sugar', amount: 2, unit: 'tbsp' }, { name: 'smoked paprika', amount: 2, unit: 'tsp' }, { name: 'coleslaw mix', amount: 300, unit: 'g' }], servings: 4 },
+  // ── Ghanaian ─────────────────────────────────────────────────────
+  { id: 'm-gh-1', name: 'Jollof Rice with Chicken', description: 'West African one-pot rice cooked in spiced tomato sauce with grilled chicken.', imageUrl: '', prepTime: 60, difficulty: 'Medium', cuisines: ['Ghanaian'], tags: ['Family Friendly', 'Hearty'],
+    ingredients: [{ name: 'long grain rice', amount: 400, unit: 'g' }, { name: 'chicken pieces', amount: 600, unit: 'g' }, { name: 'tomato purée', amount: 200, unit: 'ml' }, { name: 'scotch bonnet', amount: 1, unit: 'pcs' }, { name: 'onion', amount: 2, unit: 'pcs' }], servings: 4 },
+  { id: 'm-gh-2', name: 'Groundnut Soup', description: 'Rich peanut-based soup with chicken or tofu, served over fufu or rice.', imageUrl: '', prepTime: 50, difficulty: 'Medium', cuisines: ['Ghanaian'], tags: ['Hearty', 'Family Friendly'],
+    ingredients: [{ name: 'groundnut paste', amount: 200, unit: 'g' }, { name: 'chicken thighs', amount: 500, unit: 'g' }, { name: 'tomatoes', amount: 3, unit: 'pcs' }, { name: 'ginger', amount: 2, unit: 'tsp' }, { name: 'rice', amount: 300, unit: 'g' }], servings: 4 },
 ]
 
 function mapHFItem(item: Record<string, unknown>): HFMeal {
