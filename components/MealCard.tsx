@@ -268,21 +268,17 @@ export function MealCard({
             aria-label="Edit"
             onClick={() => onEdit(day, meal)}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              padding: '5px 10px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 28, height: 28,
               borderRadius: 999,
               border: '1px solid var(--mist)',
               background: 'transparent',
-              fontSize: 11,
-              fontWeight: 500,
               color: 'var(--aubergine)',
               cursor: 'pointer',
               transition: 'background 0.15s',
             }}
           >
-            <Pencil size={12} /> {strings.edit}
+            <Pencil size={12} />
           </button>
         )}
         {meal && (
@@ -290,21 +286,17 @@ export function MealCard({
             aria-label="Cooking instructions"
             onClick={() => setShowInstructions(true)}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              padding: '5px 10px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 28, height: 28,
               borderRadius: 999,
               border: '1px solid var(--mist)',
               background: 'transparent',
-              fontSize: 11,
-              fontWeight: 500,
               color: '#41A05F',
               cursor: 'pointer',
               transition: 'background 0.15s',
             }}
           >
-            <BookOpen size={12} /> Instructions
+            <BookOpen size={12} />
           </button>
         )}
       </div>
