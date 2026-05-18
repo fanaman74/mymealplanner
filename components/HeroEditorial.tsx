@@ -186,9 +186,9 @@ export function HeroEditorial() {
                   color: '#fff',
                 }}>→</span>
               </button>
-              <button
+              <a
+                href="/list"
                 className="mmp-hero-cta-outline"
-                onClick={() => window.open('/print', '_blank')}
                 style={{
                   background: 'transparent',
                   color: INK,
@@ -199,13 +199,13 @@ export function HeroEditorial() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 8,
-                  cursor: 'pointer',
-                  transition: 'background 0.15s',
+                  textDecoration: 'none',
                   fontFamily: 'inherit',
+                  transition: 'background 0.15s',
                 }}
               >
-                <span>▶</span> Voir la liste
-              </button>
+                🛒 Ma liste de courses
+              </a>
             </div>
 
           </div>
