@@ -24,8 +24,11 @@ export async function POST(req: NextRequest) {
 
   const resend = new Resend(apiKey)
 
+  // Use RESEND_FROM_EMAIL env var if set (verified domain), otherwise fall back to Resend's test sender
+  const from = process.env.RESEND_FROM_EMAIL ?? 'MyMealPlanner <onboarding@resend.dev>'
+
   const { error } = await resend.emails.send({
-    from: 'MyMealPlanner <shopping@mymealplanner.app>',
+    from,
     to,
     subject,
     html,
